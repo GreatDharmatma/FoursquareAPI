@@ -5,7 +5,9 @@ using System.Text;
 
 namespace Brahmastra.FoursquareAPI.Entities
 {
-    class Reason
+    public class reason
     {
+        public string type;
+        public string message;
     }
 }

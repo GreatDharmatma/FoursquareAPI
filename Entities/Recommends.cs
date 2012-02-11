@@ -5,7 +5,10 @@ using System.Text;
 
 namespace Brahmastra.FoursquareAPI.Entities
 {
-    class Recommends
+    public class recommends
     {
+        public List<reason> reasons;
+        public Venue venue;
+        public List<Tip> tips;
     }
 }
