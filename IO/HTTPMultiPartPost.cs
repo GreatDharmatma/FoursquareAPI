@@ -1,0 +1,79 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Net;
+
+namespace Brahmastra.FoursquareAPI.IO
+{
+    public class HTTPMultiPartPost
+    {
+        public string responseBody = "";
+
+        public HTTPMultiPartPost(string url, Dictionary<string, string> parameters, string filePath)
+        {
+            FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+            doPost(url, parameters, filePath, fileStream);
+        }
+
+        public HTTPMultiPartPost(string url, Dictionary<string, string> parameters, string fileName, FileStream fileStream)
+        {
+            doPost(url, parameters, fileName, fileStream);
+        }
+
+        private void doPost(string url, Dictionary<string, string> parameters, string fileName, FileStream fileStream)
+        {
+            string boundary = "---------------------------" + DateTime.Now.Ticks.ToString("x");
+            byte[] boundaryBytes = System.Text.Encoding.ASCII.GetBytes("\r\n--" + boundary + "\r\n");
+            HttpWebRequest wr = (HttpWebRequest)WebRequest.Create(url);
+            wr.ContentType = "multipart/form-data; boundary=" + boundary;
+            wr.Method = "POST";
+            wr.KeepAlive = true;
+            wr.Credentials = System.Net.CredentialCache.DefaultCredentials;
+            Stream rs = wr.GetRequestStream();
+            string formdataTemplate = "Content-Disposition: form-data; name=\"{0}\"\r\n\r\n{1}";
+            foreach (string key in parameters.Keys)
+            {
+                rs.Write(boundaryBytes, 0, boundaryBytes.Length);
+                string formitem = string.Format(formdataTemplate, key, parameters[key]);
+                byte[] formitembytes = System.Text.Encoding.UTF8.GetBytes(formitem);
+                rs.Write(formitembytes, 0, formitembytes.Length);
+            }
+            rs.Write(boundaryBytes, 0, boundaryBytes.Length);
+            string headerTemplate = "Content-Disposition: form-data; name=\"{0}\"; filename=\"{1}\"\r\nContent-Type: {2}\r\n\r\n";
+            string header = string.Format(headerTemplate, "jpeg", fileName, "image/jpeg");
+            byte[] headerBytes = System.Text.Encoding.UTF8.GetBytes(header);
+            rs.Write(headerBytes, 0, headerBytes.Length);
+            byte[] buffer = new byte[4096];
+            int bytesRead = 0;
+            while ((bytesRead = fileStream.Read(buffer, 0, buffer.Length)) != 0)
+            {
+                rs.Write(buffer, 0, bytesRead);
+            }
+            fileStream.Close();
+            byte[] trailer = System.Text.Encoding.ASCII.GetBytes("\r\n--" + boundary + "--\r\n");
+            rs.Write(trailer, 0, trailer.Length);
+            rs.Close();
+            WebResponse wResponse = null;
+            try
+            {
+                wResponse = wr.GetResponse();
+                Stream stream2 = wResponse.GetResponseStream();
+                StreamReader reader2 = new StreamReader(stream2);
+                responseBody = reader2.ReadToEnd();
+            }
+            catch (Exception ex)
+            {
+                if (wResponse != null)
+                {
+                    wResponse.Close();
+                    wResponse = null;
+                    Console.WriteLine(ex.Message);
+                }
+            }
+            finally
+            {
+                wr = null;
+            }
+        }
+    }
+}
