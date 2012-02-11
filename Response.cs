@@ -7,7 +7,7 @@ using Brahmastra.FoursquareAPI.Entities;
 
 namespace Brahmastra.FoursquareAPI
 {
-    class Response
+    public class Response
     {
         public string metaCode = "";
         public string metaErrorType = "";

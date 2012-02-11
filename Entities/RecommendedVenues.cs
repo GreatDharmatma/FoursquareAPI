@@ -7,7 +7,7 @@ namespace Brahmastra.FoursquareAPI.Entities
     {
         public Dictionary<string, string> keywords = new Dictionary<string, string>();
         public string warning = "";
-        public Dictionary<string, List<recommends>> places = new Dictionary<string, List<recommends>>();
+        public Dictionary<string, List<Recommends>> places = new Dictionary<string, List<Recommends>>();
 
         public RecommendedVenues(Dictionary<string, object> JSONDictionary)
             : base(JSONDictionary)
@@ -25,12 +25,12 @@ namespace Brahmastra.FoursquareAPI.Entities
             {
                 string Type = ((Dictionary<string, object>)GroupObj)["type"].ToString();
 
-                List<recommends> recs = new List<recommends>();
+                List<Recommends> recs = new List<Recommends>();
                 foreach (object ItemObj in (object[])((Dictionary<string, object>)GroupObj)["items"])
                 {
-                    recommends r = new recommends();
+                    Recommends r = new Recommends();
                     r.tips = new List<Tip>();
-                    r.reasons = new List<reason>();
+                    r.reasons = new List<Reason>();
 
                     r.venue = new Venue((Dictionary<string, object>)((Dictionary<string, object>)ItemObj)["venue"]);
                     if (((Dictionary<string, object>)ItemObj).ContainsKey("tips"))
@@ -42,7 +42,7 @@ namespace Brahmastra.FoursquareAPI.Entities
                     }
                     foreach (object ReasonObj in (object[])Helpers.extractDictionary((Dictionary<string, object>)ItemObj, "reasons")["items"])
                     {
-                        reason reas = new reason();
+                        Reason reas = new Reason();
                         reas.type = ((Dictionary<string, object>)ReasonObj)["type"].ToString();
                         reas.message = ((Dictionary<string, object>)ReasonObj)["message"].ToString();
                         r.reasons.Add(reas);

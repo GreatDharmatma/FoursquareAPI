@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Brahmastra.FoursquareAPI.IO
 {
-    public class HTTPPost
+    class HTTPPost
     {
         private HttpWebRequest request;
         private HttpWebResponse response;

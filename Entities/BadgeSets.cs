@@ -6,8 +6,8 @@ namespace Brahmastra.FoursquareAPI.Entities
     public class BadgeSets : Response
     {
         public string defaultSetType = "";
-        public List<BadgeSet> BadgeSets = new List<BadgeSet>();
-        public List<Badge> Badges = new List<Badge>();
+        public List<BadgeSet> badgeSets = new List<BadgeSet>();
+        public List<Badge> badges = new List<Badge>();
 
         public BadgeSets(Dictionary<string, object> JSONDictionary)
             : base(JSONDictionary)
@@ -23,7 +23,7 @@ namespace Brahmastra.FoursquareAPI.Entities
             {
                 foreach (KeyValuePair<string, object> Obj in (Dictionary<string, object>)JSONDictionary["badges"])
                 {
-                    Badges.Add(new Badge((Dictionary<string, object>)Obj.Value));
+                    badges.Add(new Badge((Dictionary<string, object>)Obj.Value));
                 }
             }
 
@@ -31,7 +31,7 @@ namespace Brahmastra.FoursquareAPI.Entities
             {
                 foreach (object Obj in (object[])((Dictionary<string, object>)JSONDictionary["sets"])["groups"])
                 {
-                    BadgeSets.Add(new BadgeSet((Dictionary<string, object>)Obj));
+                    badgeSets.Add(new BadgeSet((Dictionary<string, object>)Obj));
                 }
             }
         }

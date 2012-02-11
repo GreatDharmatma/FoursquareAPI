@@ -5,7 +5,7 @@ using System.Net;
 
 namespace Brahmastra.FoursquareAPI.IO
 {
-    public class HTTPMultiPartPost
+    class HTTPMultiPartPost
     {
         public string responseBody = "";
 

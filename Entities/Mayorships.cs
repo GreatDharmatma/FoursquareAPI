@@ -12,7 +12,7 @@ namespace Brahmastra.FoursquareAPI.Entities
         public Mayorships(Dictionary<string, object> JSONDictionary)
             : base(JSONDictionary)
         {
-            JSONDictionary = Helpers.ExtractDictionary(JSONDictionary, "response:mayorships");
+            JSONDictionary = Helpers.extractDictionary(JSONDictionary, "response:mayorships");
             string StrCount = Helpers.getDictionaryValue(JSONDictionary, "count");
             Int32.TryParse(StrCount, out Count);
             foreach (object Obj in (object[])JSONDictionary["items"])

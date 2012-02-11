@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Brahmastra.FoursquareAPI.Entities
 {
-    class LeaderboardItem
+    public class LeaderboardItem
     {
         public int Rank;
         public User User;

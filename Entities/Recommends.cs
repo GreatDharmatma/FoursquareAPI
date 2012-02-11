@@ -5,9 +5,9 @@ using System.Text;
 
 namespace Brahmastra.FoursquareAPI.Entities
 {
-    public class recommends
+    public class Recommends
     {
-        public List<reason> reasons;
+        public List<Reason> reasons;
         public Venue venue;
         public List<Tip> tips;
     }

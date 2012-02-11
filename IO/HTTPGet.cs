@@ -7,24 +7,20 @@ namespace Brahmastra.FoursquareAPI.IO
 {
     class HTTPGet
     {
-        public class HTTPGet
-        {
-            private HttpWebRequest request;
-            private HttpWebResponse response;
+        private HttpWebRequest request;
+        private HttpWebResponse response;
 
-            private string responseBody;
-            private string escapedBody;
-            private int statusCode;
+        private string responseBody;
+        private string escapedBody;
+        private int statusCode;
 
-            public string ResponseBody { get { return responseBody; } }
-            public string EscapedBody { get { return getEscapedBody(); } }
-            public int StatusCode { get { return statusCode; } }
-            public string Headers { get { return getHeaders(); } }
-            public string StatusLine { get { return getStatusLine(); } }
+        public string ResponseBody { get { return responseBody; } }
+        public string EscapedBody { get { return getEscapedBody(); } }
+        public int StatusCode { get { return statusCode; } }
+        public string Headers { get { return getHeaders(); } }
+        public string StatusLine { get { return getStatusLine(); } }
 
-
-
-            public void Request(string url)
+        public void Request(string url)
             {
                 StringBuilder respBody = new StringBuilder();
 
@@ -54,8 +50,8 @@ namespace Brahmastra.FoursquareAPI.IO
                     this.escapedBody = "No Server Response";
                 }
             }
-
-            private string getEscapedBody()
+        
+        public string getEscapedBody()
             {  
                 // HTML escaped chars
                 string escapedBody = responseBody;
@@ -69,7 +65,7 @@ namespace Brahmastra.FoursquareAPI.IO
                 return escapedBody;
             }
 
-            private string getHeaders()
+        public string getHeaders()
             {
                 if (response == null)
                     return "No Server Response";
@@ -84,7 +80,7 @@ namespace Brahmastra.FoursquareAPI.IO
                 }
             }
 
-            private string getStatusLine()
+        public string getStatusLine()
             {
                 if (response == null)
                     return "No Server Response";
@@ -92,6 +88,5 @@ namespace Brahmastra.FoursquareAPI.IO
                     return string.Format("HTTP/{0} {1} {2}", response.ProtocolVersion,
                         (int)response.StatusCode, response.StatusDescription);
             }
-        }
     }
 }
