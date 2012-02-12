@@ -6,36 +6,32 @@ namespace Brahmastra.FoursquareAPI.Entities
 {
     public class Tips : Response
     {
-        public int count = 0;
-        List<Tip> tips = new List<Tip>();
+        public int Count { get; private set; }
+        public List<Tip> Tip { get; private set; }
 
-        public Tips(Dictionary<string, object> JSONDictionary)
-            : base(JSONDictionary)
+        public Tips(Dictionary<string, object> jsonDictionary)
+            : base(jsonDictionary)
         {
-           JSONDictionary = Helpers.extractDictionary(JSONDictionary, "response");
-            if (JSONDictionary["tips"].GetType() == typeof(Dictionary<string, object>))
+            Tip = new List<Tip>();
+            Count = 0;
+            jsonDictionary = Helpers.ExtractDictionary(jsonDictionary, "response");
+            if (jsonDictionary["tips"].GetType() == typeof(Dictionary<string, object>))
             {
-                JSONDictionary = Helpers.extractDictionary(JSONDictionary, "tips");
-                if (JSONDictionary.ContainsKey("count"))
-                {
-                    count = (int)JSONDictionary["count"];
-                }
-                object[] Items = (object[])JSONDictionary["items"];
+                jsonDictionary = Helpers.ExtractDictionary(jsonDictionary, "tips");
+                if (jsonDictionary.ContainsKey("count"))
+                    Count = (int) jsonDictionary["count"];
+                var items = (object[])jsonDictionary["items"];
 
-                for (int x = 0; x < Items.Length; x++)
-                {
-                    tips.Add(new Tip(((Dictionary<string, object>)Items[x])));
-                }
+                foreach (object obj in items)
+                    Tip.Add(new Tip(((Dictionary<string, object>) obj)));
             }
-            if (JSONDictionary["items"].GetType() == typeof(Object[]))
+            if (jsonDictionary["items"].GetType() == typeof(Object[]))
             {
-                object[] Items = (object[])JSONDictionary["items"];
+                var items = (object[])jsonDictionary["items"];
 
-                foreach (object Obj in Items)
-                {
-                    tips.Add(new Tip(((Dictionary<string, object>)Obj)));
-                }
-                count = tips.Count;
+                foreach (var obj in items)
+                    Tip.Add(new Tip(((Dictionary<string, object>) obj)));
+                Count = Tip.Count;
             }
         }
     }

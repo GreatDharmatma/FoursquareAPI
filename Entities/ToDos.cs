@@ -5,23 +5,18 @@ namespace Brahmastra.FoursquareAPI.Entities
 {
         public class ToDos : Response
         {
-            public int count = 0;
-            List<ToDo> todos = new List<ToDo>();
+            public List<ToDo> Todos { get; private set; }
+            public int Count { get; private set; }
 
-            public ToDos(Dictionary<string, object> JSONDictionary)
-                : base(JSONDictionary)
+            public ToDos(Dictionary<string, object> jsonDictionary)
+                : base(jsonDictionary)
             {
-                JSONDictionary = Helpers.extractDictionary(JSONDictionary, "response:todos");
-                if (JSONDictionary.ContainsKey("count"))
-                {
-                    count = (int)JSONDictionary["count"];
-                }
-                object[] Items = (object[])JSONDictionary["items"];
-
-                for (int x = 0; x < Items.Length; x++)
-                {
-                    todos.Add(new ToDo(((Dictionary<string, object>)Items[x])));
-                }
+                Todos = new List<ToDo>();
+                jsonDictionary = Helpers.ExtractDictionary(jsonDictionary, "response:todos");
+                Count = jsonDictionary.ContainsKey("count") ? (int) jsonDictionary["count"] : 0;
+                var items = (object[])jsonDictionary["items"];
+                foreach (var obj in items)
+                    Todos.Add(new ToDo(((Dictionary<string, object>) obj)));
             }
         }
 }

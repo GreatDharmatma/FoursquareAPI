@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿
+using System;
+using System.Collections.Generic;
+using Brahmastra.FoursquareAPI.Entities;
 using Brahmastra.FoursquareAPI.Entities.Notifications;
 using Brahmastra.FoursquareAPI.IO;
-using Brahmastra.FoursquareAPI.Entities;
 
 namespace Brahmastra.FoursquareAPI
 {
@@ -13,33 +14,48 @@ namespace Brahmastra.FoursquareAPI
         public string MetaCode { get; private set; }
         public string MetaErrorType { get; private set; }
         public string MetaErrorDetail { get; private set; }
-        public Notification<BadgeNotification> BadgeNotification { get; private set; }
+        //public Notification<BadgeNotification> BadgeNotification { get; private set; }
         public Notification<LeaderboardNotification> LeaderboardNotification { get; private set; }
         public Notification<MayorshipNotification> MayorshipNotification { get; private set; }
         public Notification<MessageNotification> MessageNotification { get; private set; }
         public Notification<ScoreNotification> ScoreNotification { get; private set; }
-        public Notification<TipAlertNotification> TipAlertNotification { get; private set; }
-        public Notification<TipNotification> TipNotification { get; private set; }
+        //public Notification<TipAlertNotification> TipAlertNotification { get; private set; }
+        //public Notification<TipNotification> TipNotification { get; private set; }
 
         public Response(Dictionary<string, object> jsonDictionary)
         {
+            Json = Helpers.JsonSerializer(jsonDictionary);
+            var meta = Helpers.ExtractDictionary(jsonDictionary, "meta");
+            MetaCode = Helpers.GetDictionaryValue(meta, "code");
+            MetaErrorType = Helpers.GetDictionaryValue(meta, "errorType");
+            if (MetaErrorType.Contains("deprecated"))
+            {
+                throw new Exception("deprecated Call");
+                //todo - handle this somehow.
+            }
+            MetaErrorDetail = Helpers.GetDictionaryValue(meta, "errorDetail");
             if (jsonDictionary.ContainsKey("notifications"))
-                foreach ( var type in from obj in (object[]) jsonDictionary["notifications"] select jsonDictionary["type"].ToString())
+                foreach (object obj in (object[])jsonDictionary["notifications"])
                 {
+                    var v = (Dictionary<string, object>) obj;
+                    string type = v["type"].ToString();
                     switch (type)
                     {
+                        case"badge":
+                            //Implement some day!
+                            break;
                         case "message":
                             MessageNotification =
-                                new Notification<MessageNotification>(new MessageNotification(jsonDictionary),type);
+                                new Notification<MessageNotification>(new MessageNotification((Dictionary<string, object>)v["item"]), type);
                             break;
                         case "mayorship":
                             MayorshipNotification =
-                                new Notification<MayorshipNotification>(new MayorshipNotification(jsonDictionary), type);
+                                new Notification<MayorshipNotification>(new MayorshipNotification((Dictionary<string, object>)v["item"]), type);
                             break;
 
                         case "leaderboard":
                             LeaderboardNotification =
-                                new Notification<LeaderboardNotification>(new LeaderboardNotification(jsonDictionary),type);
+                                new Notification<LeaderboardNotification>(new LeaderboardNotification((Dictionary<string, object>)v["item"]), type);
                             break;
 
                         case "tip":
@@ -53,37 +69,12 @@ namespace Brahmastra.FoursquareAPI
                             break;
 
                         case "score":
-                            /*int loc = JSON.IndexOf("points");
-                            string newJSON = JSON.Substring(loc - 2, JSON.LastIndexOf(']') - loc + 2);
-                            if (newJSON.LastIndexOf('}').Equals(newJSON.Length - 1))
-                            {
-                                var jsonList = new List<string>();
-                                while (newJSON.Contains("},{"))
-                                {
-                                    jsonList.Add(newJSON.Substring(0, newJSON.IndexOf("},{", System.StringComparison.Ordinal) + 1));
-                                    newJSON = newJSON.Substring(newJSON.IndexOf("},{", System.StringComparison.Ordinal) + 2);
-                                }
-                                jsonList.Add(newJSON);
-                                foreach (var str in jsonList)
-                                {
-                                    var dict = Helpers.JsonDeserializer(str);
-                                    //_message += dict["message"].ToString() + " +" + dict["points"].ToString() + "|";
-                                    //_message += "\r\n";
-                                }
-                            }
-                            else
-                            {
-                                Dictionary<string, object> dict = Helpers.JsonDeserializer(newJSON);
-                                _message += dict["message"].ToString() + " +" + dict["points"].ToString() + "\r\n";
-                            }
-                            TotalScore = ((Dictionary<string, object>)jsonDictionary["item"])["total"].ToString();*/
+                            ScoreNotification = new Notification<ScoreNotification>(new ScoreNotification((Dictionary<string, object>)v["item"]), type);
                             break;
 
                         case "notificationTray":
                             //NotificationTrayunreadCount = ((Dictionary<string, object>)jsonDictionary["item"])["unreadCount"].ToString() + "\r\n";
                             break;
-
-                            // throw new Exception("New Type of Notification");
                     }
                 }
         }

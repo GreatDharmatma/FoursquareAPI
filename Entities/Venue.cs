@@ -1,154 +1,135 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Brahmastra.FoursquareAPI.Entities.Notifications;
 using Brahmastra.FoursquareAPI.IO;
 
 namespace Brahmastra.FoursquareAPI.Entities
 {
     public class Venue : Response
     {
-        public string id = "";
-        public string name = "";
-        public bool verified = false;
-        //public List<FourSquareNotification> Notifications = new List<FourSquareNotification>();
-        public Contact contact;
-        public Location location;
-        public List<Category> categories = new List<Category>();
-        public List<Special> specials = new List<Special>();
-        public object hereNow;
-        public string description = "";
-        public Stats stats;
-        public Mayorship mayor;
-        public Dictionary<string, List<Tip>> tips = new Dictionary<string, List<Tip>>();
-        public List<ToDo> todos = new List<ToDo>();
-        public List<string> tags = new List<string>();
-        public int beenHere = 0;
-        public string shortUrl = "";
-        public string url = "";
-        public string timeZone = "";
-        public List<Special> specialsNearby = new List<Special>();
-        public object photos = "";
+        private int _beenHere;
 
-        public Venue(Dictionary<string, object> JSONDictionary)
-            : base(JSONDictionary)
+        public string Id { get; private set; }
+        public string Name { get; private set; }
+        public bool Verified { get; private set; }
+        public Contact Contact { get; private set; }
+        public Location Location { get; private set; }
+        public List<Category> Categories { get; private set; }
+        public List<Special> Specials { get; private set; }
+        public object HereNow { get; private set; }
+        public string Description { get; private set; }
+        public Stats Stats { get; private set; }
+        public Mayorship Mayor { get; private set; }
+        public Dictionary<string, List<Tip>> Tips { get; private set; }
+        public List<ToDo> Todos { get; private set; }
+        public List<string> Tags { get; private set; }
+        public string ShortUrl { get; private set; }
+        public string Url { get; private set; }
+        public string TimeZone { get; private set; }
+        public List<Special> SpecialsNearby { get; private set; }
+        public object Photos { get; private set; }
+        
+        public int BeenHere
         {
-            if (JSONDictionary.ContainsKey("response"))
-            {
-                JSONDictionary = Helpers.extractDictionary(JSONDictionary, "response:venue");
-            }
-            else
-            {
-                JSONDictionary = Helpers.extractDictionary(JSONDictionary, "venue");
-            }
-            id = Helpers.getDictionaryValue(JSONDictionary, "id");
-            name = Helpers.getDictionaryValue(JSONDictionary, "name");
-            verified = Helpers.getDictionaryValue(JSONDictionary, "verified").Equals("True");
+            get { return _beenHere; }
+            set { _beenHere = value; }
+        }
 
-            if (JSONDictionary.ContainsKey("contact"))
-            {
-                contact = new Contact((Dictionary<string, object>)JSONDictionary["contact"]);
-            }
+        public Venue(Dictionary<string, object> jsonDictionary)
+            : base(jsonDictionary)
+        {
+            Photos = "";
+            SpecialsNearby = new List<Special>();
+            Tags = new List<string>();
+            Todos = new List<ToDo>();
+            Tips = new Dictionary<string, List<Tip>>();
+            Specials = new List<Special>();
+            Categories = new List<Category>();
+            jsonDictionary = Helpers.ExtractDictionary(jsonDictionary, jsonDictionary.ContainsKey("response") ? "response:venue" : "venue");
+            Id = Helpers.GetDictionaryValue(jsonDictionary, "id");
+            Name = Helpers.GetDictionaryValue(jsonDictionary, "name");
+            Verified = Helpers.GetDictionaryValue(jsonDictionary, "verified").Equals("True");
 
-            if (JSONDictionary.ContainsKey("location"))
-            {
-                location = new Location((Dictionary<string, object>)JSONDictionary["location"]);
-            }
+            if (jsonDictionary.ContainsKey("contact"))
+                Contact = new Contact((Dictionary<string, object>) jsonDictionary["contact"]);
 
-            if (JSONDictionary.ContainsKey("categories"))
-            {
-                foreach (object obj in ((object[])JSONDictionary["categories"]))
-                {
-                    categories.Add(new Category((Dictionary<string, object>)obj));
-                }
-            }
+            if (jsonDictionary.ContainsKey("location"))
+                Location = new Location((Dictionary<string, object>) jsonDictionary["location"]);
 
-            if (JSONDictionary.ContainsKey("specials"))
-            {
-                foreach (object Obj in (object[])JSONDictionary["specials"])
-                {
-                    specials.Add(new Special((Dictionary<string, object>)Obj));
-                }
-            }
+            if (jsonDictionary.ContainsKey("categories"))
+                foreach (var obj in ((object[]) jsonDictionary["categories"]))
+                    Categories.Add(new Category((Dictionary<string, object>) obj));
 
-            if (JSONDictionary.ContainsKey("hereNow"))
+            if (jsonDictionary.ContainsKey("specials"))
+                foreach (var obj in (object[]) jsonDictionary["specials"])
+                    Specials.Add(new Special((Dictionary<string, object>) obj));
+
+            if (jsonDictionary.ContainsKey("hereNow"))
             {
 
-                if (((int)Helpers.extractDictionary(JSONDictionary, "hereNow")["count"]) > 0)
+                if (((int)Helpers.ExtractDictionary(jsonDictionary, "hereNow")["count"]) > 0)
                 {
                     //TODO here now
                     //throw new Exception("hereNow");
                 }
             }
 
-            description = Helpers.getDictionaryValue(JSONDictionary, "description");
+            Description = Helpers.GetDictionaryValue(jsonDictionary, "description");
 
-            if (JSONDictionary.ContainsKey("stats"))
+            if (jsonDictionary.ContainsKey("stats"))
+                Stats = new Stats((Dictionary<string, object>) jsonDictionary["stats"]);
+
+            if (jsonDictionary.ContainsKey("mayor"))
             {
-                stats = new Stats((Dictionary<string, object>)JSONDictionary["stats"]);
+                Mayor = new Mayorship(Helpers.ExtractDictionary(jsonDictionary, "mayor"));
+               // mayor.Checkins = Helpers.ExtractDictionary(jsonDictionary, "mayor")["count"].ToString();
             }
 
-            if (JSONDictionary.ContainsKey("mayor"))
+            if (jsonDictionary.ContainsKey("tips"))
             {
-                mayor = new Mayorship(Helpers.extractDictionary(JSONDictionary, "mayor"));
-                mayor.Checkins = Helpers.extractDictionary(JSONDictionary, "mayor")["count"].ToString();
-            }
-
-            if (JSONDictionary.ContainsKey("tips"))
-            {
-                foreach (object Obj in (object[])Helpers.extractDictionary(JSONDictionary, "tips")["groups"])
+                foreach (var obj in (object[])Helpers.ExtractDictionary(jsonDictionary, "tips")["groups"])
                 {
-                    Dictionary<string, object> Group = ((Dictionary<string, object>)Obj);
-                    List<Tip> tipList = new List<Tip>();
-                    foreach (object Tip in (object[])((Dictionary<string, object>)Obj)["items"])
-                    {
-                        tipList.Add(new Tip((Dictionary<string, object>)Tip));
-                    }
-                    tips.Add(Helpers.getDictionaryValue(Group,"type"),tipList);
+                    var group = ((Dictionary<string, object>)obj);
+                    var tipList = (from tip in (object[]) ((Dictionary<string, object>) obj)["items"] select new Tip((Dictionary<string, object>) tip)).ToList();
+                    Tips.Add(Helpers.GetDictionaryValue(group,"type"),tipList);
                 }
             }
 
-            if (JSONDictionary.ContainsKey("todos"))
+            if (jsonDictionary.ContainsKey("todos"))
             {
                 //TODO: Todos
                 //CRUEL IRONY
-                if ((int)((Dictionary<string, Object>)JSONDictionary["todos"])["count"] > 0)
+                if ((int)((Dictionary<string, Object>)jsonDictionary["todos"])["count"] > 0)
                 {
                     //throw new Exception("todos");
                 }
             }
 
-            if (JSONDictionary.ContainsKey("tags"))
-            {
-                foreach (object Obj in (object[])JSONDictionary["tags"])
-                {
-                    tags.Add((string)Obj);
-                }
-            }
+            if (jsonDictionary.ContainsKey("tags"))
+                foreach (var obj in (object[]) jsonDictionary["tags"])
+                    Tags.Add((string) obj);
 
-            if (JSONDictionary.ContainsKey("beenHere"))
-            {
-                Int32.TryParse(((Dictionary<string, Object>)JSONDictionary["beenHere"])["count"].ToString(), out beenHere);
-            }
-            shortUrl = Helpers.getDictionaryValue(JSONDictionary, "shortUrl");
-            url = Helpers.getDictionaryValue(JSONDictionary, "url");
-            timeZone = Helpers.getDictionaryValue(JSONDictionary, "timeZone");
+            if (jsonDictionary.ContainsKey("beenHere"))
+                Int32.TryParse(((Dictionary<string, Object>) jsonDictionary["beenHere"])["count"].ToString(),
+                               out _beenHere);
+            ShortUrl = Helpers.GetDictionaryValue(jsonDictionary, "shortUrl");
+            Url = Helpers.GetDictionaryValue(jsonDictionary, "url");
+            TimeZone = Helpers.GetDictionaryValue(jsonDictionary, "timeZone");
 
-            if (JSONDictionary.ContainsKey("specialsNearby"))
-            {
-                foreach (object Obj in (object[])JSONDictionary["specialsNearby"])
+            if (jsonDictionary.ContainsKey("specialsNearby"))
+                foreach (var obj in (object[]) jsonDictionary["specialsNearby"])
                 {
-                    specialsNearby.Add(new Special((Dictionary<string, object>)Obj));
+                    SpecialsNearby.Add(new Special((Dictionary<string, object>) obj));
                     throw new Exception("See if this actually worlks");
                 }
-            }
 
-            if (JSONDictionary.ContainsKey("photos"))
-            {
-                if ((int)((Dictionary<string, object>)JSONDictionary["photos"])["count"] > 0)
+            if (jsonDictionary.ContainsKey("photos"))
+                if ((int) ((Dictionary<string, object>) jsonDictionary["photos"])["count"] > 0)
                 {
                     //throw new Exception("To Do Item for this class");
                     //Todo
                 }
-            }
         }
     }
 }

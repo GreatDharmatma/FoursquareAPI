@@ -5,17 +5,17 @@ namespace Brahmastra.FoursquareAPI.Entities
 {
     public class ToDo : Response
     {
-        public string id = "";
-        public string createdAt = "";
-        public Tip tip;
+        public string CreatedAt { get; private set; }
+        public Tip Tip { get; private set; }
+        public string Id { get; private set; }
 
-        public ToDo(Dictionary<string, object> JSONDictionary)
-            : base(JSONDictionary)
+        public ToDo(Dictionary<string, object> jsonDictionary)
+            : base(jsonDictionary)
         {
-            JSONDictionary = Helpers.extractDictionary(JSONDictionary, "response:todo");
-            id = Helpers.getDictionaryValue(JSONDictionary, "id");
-            createdAt = Helpers.getDictionaryValue(JSONDictionary, "createdAt");
-            tip = new Tip(JSONDictionary);
+            jsonDictionary = Helpers.ExtractDictionary(jsonDictionary, "response:todo");
+            Id = Helpers.GetDictionaryValue(jsonDictionary, "id");
+            CreatedAt = Helpers.GetDictionaryValue(jsonDictionary, "createdAt");
+            Tip = new Tip(jsonDictionary);
         }
     }
 }

@@ -5,17 +5,18 @@ namespace Brahmastra.FoursquareAPI.Entities
 {
     public class PhotoSize
     {
-        public string url = "";
-        public string width = "";
-        public string height = "";
-        private string JSON = "";
+        internal string Json = "";
 
-        public PhotoSize(Dictionary<string, object> JSONDictionary)
+        public string Url { get; private set; }
+        public string Width { get; private set; }
+        public string Height { get; private set; }
+
+        public PhotoSize(Dictionary<string, object> jsonDictionary)
         {
-            JSON = Helpers.JSONSerializer(JSONDictionary);
-            url = Helpers.getDictionaryValue(JSONDictionary, "url");
-            width = Helpers.getDictionaryValue(JSONDictionary, "width");
-            height = Helpers.getDictionaryValue(JSONDictionary, "height");
+            Json = Helpers.JsonSerializer(jsonDictionary);
+            Url = Helpers.GetDictionaryValue(jsonDictionary, "url");
+            Width = Helpers.GetDictionaryValue(jsonDictionary, "width");
+            Height = Helpers.GetDictionaryValue(jsonDictionary, "height");
         }
     }
 }

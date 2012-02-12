@@ -5,25 +5,19 @@ namespace Brahmastra.FoursquareAPI.Entities
 {
     public class Specials : Response
     {
-        int count = 0;
-        List<Special> specials = new List<Special>();
+        public List<Special> Special { get; private set; }
 
-        public Specials(Dictionary<string, object> JSONDictionary)
-            : base(JSONDictionary)
+        public int Count { get; private set; }
+
+        public Specials(Dictionary<string, object> jsonDictionary)
+            : base(jsonDictionary)
         {
-            JSONDictionary = Helpers.extractDictionary(JSONDictionary, "response:specials");
-            foreach (object Obj in (object[])JSONDictionary["items"])
-            {
-                specials.Add(new Special((Dictionary<string, object>)Obj));
-            }
-            if (JSONDictionary.ContainsKey("count"))
-            {
-                count = (int)JSONDictionary["count"];
-            }
-            else
-            {
-                count = specials.Count;
-            }
+            Special = new List<Special>();
+            jsonDictionary = Helpers.ExtractDictionary(jsonDictionary, "response:specials");
+            foreach (var obj in (object[]) jsonDictionary["items"])
+                Special.Add(new Special((Dictionary<string, object>) obj));
+
+            Count = jsonDictionary.ContainsKey("count") ? (int) jsonDictionary["count"] : Special.Count;
         }
     }
 }

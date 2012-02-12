@@ -1,25 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using Brahmastra.FoursquareAPI.IO;
 
 namespace Brahmastra.FoursquareAPI.Entities
 {
     public class Stats
     {
-        public string checkinsCount = "";
-        public string usersCount = "";
-        public string tipCount = "";
-        private string JSON = "";
+        internal string Json;
 
-        public Stats(Dictionary<string, object> JSONDictionary)
+        public string CheckinsCount { get; private set; }
+        public string UsersCount { get; private set; }
+        public string TipCount { get; private set; }
+
+        public Stats(Dictionary<string, object> jsonDictionary)
         {
-            JSON = Helpers.JSONSerializer(JSONDictionary);
-            checkinsCount = Helpers.getDictionaryValue(JSONDictionary, "checkinsCount");
-            usersCount = Helpers.getDictionaryValue(JSONDictionary, "usersCount");
-            tipCount = Helpers.getDictionaryValue(JSONDictionary, "tipCount");
+            Json = Helpers.JsonSerializer(jsonDictionary);
 
+            CheckinsCount = Helpers.GetDictionaryValue(jsonDictionary, "checkinsCount");
+            UsersCount = Helpers.GetDictionaryValue(jsonDictionary, "usersCount");
+            TipCount = Helpers.GetDictionaryValue(jsonDictionary, "tipCount");
         }
     }
 }

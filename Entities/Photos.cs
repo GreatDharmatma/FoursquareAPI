@@ -5,21 +5,20 @@ namespace Brahmastra.FoursquareAPI.Entities
 {
     public class Photos : Response
     {
-        public int count = 0;
-        public List<Photo> photos = new List<Photo>();
+        public int Count { get; private set; }
+        public List<Photo> Photo { get; private set; }
 
-        public Photos(Dictionary<string, object> JSONDictionary)
-            : base(JSONDictionary)
+        public Photos(Dictionary<string, object> jsonDictionary)
+            : base(jsonDictionary)
         {
-            JSONDictionary = Helpers.extractDictionary(JSONDictionary, "response:photos");
-            if (JSONDictionary.ContainsKey("count"))
-            {
-                count = (int)JSONDictionary["count"];
-            }
-            foreach (object Obj in (object[])JSONDictionary["items"])
-            {
-                photos.Add(new Photo((Dictionary<string, object>)Obj));
-            }
+            Photo = new List<Photo>();
+            Count = 0;
+            jsonDictionary = Helpers.ExtractDictionary(jsonDictionary, "response:photos");
+            if (jsonDictionary.ContainsKey("count"))
+                Count = (int) jsonDictionary["count"];
+
+            foreach (var obj in (object[]) jsonDictionary["items"])
+                Photo.Add(new Photo((Dictionary<string, object>) obj));
         }
     }
 }

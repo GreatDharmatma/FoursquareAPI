@@ -5,21 +5,22 @@ namespace Brahmastra.FoursquareAPI.Entities
 {
     public class Overlaps
     {
-        public string id = "";
-        public string createdAt = "";
-        public string type = "";
-        public string timeZone = "";
-        public User user;
-        private string JSON = "";
+        internal string Json = "";
 
-        public Overlaps(Dictionary<string, object> JSONDictionary)
+        public string Id { get; private set; }
+        public string CreatedAt { get; private set; }
+        public string Type { get; private set; }
+        public string TimeZone { get; private set; }
+        public User User { get; private set; }
+
+        public Overlaps(Dictionary<string, object> jsonDictionary)
         {
-            JSON = Helpers.JSONSerializer(JSONDictionary);
-            id = JSONDictionary["id"].ToString();
-            createdAt = JSONDictionary["createdAt"].ToString();
-            type = JSONDictionary["type"].ToString();
-            timeZone = JSONDictionary["timeZone"].ToString();
-            user = new User((Dictionary<string, object>)JSONDictionary["user"]);
+            Json = Helpers.JsonSerializer(jsonDictionary);
+            Id = jsonDictionary["id"].ToString();
+            CreatedAt = jsonDictionary["createdAt"].ToString();
+            Type = jsonDictionary["type"].ToString();
+            TimeZone = jsonDictionary["timeZone"].ToString();
+            User = new User((Dictionary<string, object>)jsonDictionary["user"]);
         }
     }
 }

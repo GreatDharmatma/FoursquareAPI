@@ -6,19 +6,20 @@ namespace Brahmastra.FoursquareAPI.Entities
 {
     public class Mayorships : Response
     {
-        int Count = 0;
-        public List<Venue> MayorVenues = new List<Venue>();
+        private readonly int _count;
 
-        public Mayorships(Dictionary<string, object> JSONDictionary)
-            : base(JSONDictionary)
+        public int Count { get { return _count; } }
+        public List<Venue> MayorVenues1 { get; set; }
+
+        public Mayorships(Dictionary<string, object> jsonDictionary)
+            : base(jsonDictionary)
         {
-            JSONDictionary = Helpers.extractDictionary(JSONDictionary, "response:mayorships");
-            string StrCount = Helpers.getDictionaryValue(JSONDictionary, "count");
-            Int32.TryParse(StrCount, out Count);
-            foreach (object Obj in (object[])JSONDictionary["items"])
-            {
-                MayorVenues.Add(new Venue((Dictionary<string, object>)Obj));
-            }
+            MayorVenues1 = new List<Venue>();
+            jsonDictionary = Helpers.ExtractDictionary(jsonDictionary, "response:mayorships");
+            var strCount = Helpers.GetDictionaryValue(jsonDictionary, "count");
+            Int32.TryParse(strCount, out _count);
+            foreach (var obj in (object[]) jsonDictionary["items"])
+                MayorVenues1.Add(new Venue((Dictionary<string, object>) obj));
         }
     }
 }

@@ -5,19 +5,17 @@ namespace Brahmastra.FoursquareAPI.Entities
 {
     public class Link : Response
     {
-        public Provider provider;
-        public string url = "";
-        public string linkedId = "";
+        public string LinkedId { get; private set; }
+        public string Url { get; private set; }
+        public Provider Provider { get; private set; }
 
-        public Link(Dictionary<string, object> JSONDictionary)
-            : base(JSONDictionary)
+        public Link(Dictionary<string, object> jsonDictionary)
+            : base(jsonDictionary)
         {
-            if (JSONDictionary.ContainsKey("provider"))
-            {
-                provider = new Provider(JSONDictionary);
-            }
-            url = Helpers.getDictionaryValue(JSONDictionary, "url");
-            linkedId = Helpers.getDictionaryValue(JSONDictionary, "linkedId");
+            if (jsonDictionary.ContainsKey("provider"))
+                Provider = new Provider(jsonDictionary);
+            Url = Helpers.GetDictionaryValue(jsonDictionary, "url");
+            LinkedId = Helpers.GetDictionaryValue(jsonDictionary, "linkedId");
         }
     }
 }

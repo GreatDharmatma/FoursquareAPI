@@ -5,28 +5,22 @@ namespace Brahmastra.FoursquareAPI.Entities
 {
     public class Mayorship
     {
-        public string Type = "";
-        public string Checkins = "";
-        public string DaysBehind = "";
-        public string Message = "";
-        public User User;
-        public string ImageURL = "";
-        private string JSON = "";
+        internal string Json = "";
 
-        public Mayorship(Dictionary<string, object> JSONDictionary)
+        public string Type { get; private set; }
+        public string Checkins { get; private set; }
+        public User User { get; private set; }
+
+        public Mayorship(Dictionary<string, object> jsonDictionary)
         {
-            JSON = Helpers.JSONSerializer(JSONDictionary);
-            Type = Helpers.getDictionaryValue(JSONDictionary, "type");
+            Json = Helpers.JsonSerializer(jsonDictionary);
 
-            Checkins = Helpers.getDictionaryValue(JSONDictionary, "Checkins");
-            DaysBehind = Helpers.getDictionaryValue(JSONDictionary, "DaysBehind");
-            Message = Helpers.getDictionaryValue(JSONDictionary, "Message");
-            ImageURL = Helpers.getDictionaryValue(JSONDictionary, "ImageURL");
-            if (JSONDictionary.ContainsKey("user"))
-            {
-                User = new User((Dictionary<string, object>)JSONDictionary["user"]);
-            }
+            Type = Helpers.GetDictionaryValue(jsonDictionary, "type");
+            Checkins = Helpers.GetDictionaryValue(jsonDictionary, "count");
+
+            if (jsonDictionary.ContainsKey("user"))
+                User = new User((Dictionary<string, object>) jsonDictionary["user"]);
         }
-
     }
 }
+

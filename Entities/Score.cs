@@ -5,21 +5,23 @@ namespace Brahmastra.FoursquareAPI.Entities
 {
     public class Score
     {
-        public int recent = 0;
-        public int max = 0;
-        public int checkinsCount = 0;
-        public int goal = 0;
-        private string JSON = "";
+        internal string Json;
 
-        public Score(Dictionary<string, object> JSONDictionary)
+        public int Goal { get; private set; }
+        public int CheckinsCount { get; private set; }
+        public int Max { get; private set; }
+        public int Recent { get; private set; }
+
+        public Score(Dictionary<string, object> jsonDictionary)
         {
-            JSON = Helpers.JSONSerializer(JSONDictionary);
-            recent = (int)JSONDictionary["recent"];
-            max = (int)JSONDictionary["max"];
-            checkinsCount = (int)JSONDictionary["checkinsCount"];
-            if (JSONDictionary.ContainsKey("goal"))
+            Json = Helpers.JsonSerializer(jsonDictionary);
+
+            Recent = (int)jsonDictionary["recent"];
+            Max = (int)jsonDictionary["max"];
+            CheckinsCount = (int)jsonDictionary["checkinsCount"];
+            if (jsonDictionary.ContainsKey("goal"))
             {
-                goal = (int)JSONDictionary["goal"];
+                Goal = (int)jsonDictionary["goal"];
             }
         }
     }

@@ -1,34 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using Brahmastra.FoursquareAPI.IO;
 
 namespace Brahmastra.FoursquareAPI.Entities
 {
     public class VenueCategory
     {
-        public string id = "";
-        public string name = "";
-        public string pluralName = "";
-        public string icon = "";
-        public List<Category> categories = new List<Category>();
-        private string JSON = "";
+        internal string Json = "";
 
-        public VenueCategory(Dictionary<string, object> JSONDictionary)
+        public List<Category> Categories { get; private set; }
+        public string PluralName { get; private set; }
+        public string Icon { get; private set; }
+        public string Name { get; private set; }
+        public string Id { get; private set; }
+        
+        public VenueCategory(Dictionary<string, object> jsonDictionary)
         {
-            JSON = Helpers.JSONSerializer(JSONDictionary);
-            id = Helpers.getDictionaryValue(JSONDictionary, "id");
-            name = Helpers.getDictionaryValue(JSONDictionary, "name");
-            pluralName = Helpers.getDictionaryValue(JSONDictionary, "pluralName");
-            icon = Helpers.getDictionaryValue(JSONDictionary, "icon");
-            if (JSONDictionary.ContainsKey("categories"))
-            {
-                foreach (object Obj in (object[])JSONDictionary["categories"])
-                {
-                    categories.Add(new Category((Dictionary<string, object>)Obj));
-                }
-            }
+            Categories = new List<Category>();
+            Json = Helpers.JsonSerializer(jsonDictionary);
+            Id = Helpers.GetDictionaryValue(jsonDictionary, "id");
+            Name = Helpers.GetDictionaryValue(jsonDictionary, "name");
+            PluralName = Helpers.GetDictionaryValue(jsonDictionary, "pluralName");
+            Icon = Helpers.GetDictionaryValue(jsonDictionary, "icon");
+            if (jsonDictionary.ContainsKey("categories"))
+                foreach (var obj in (object[]) jsonDictionary["categories"])
+                    Categories.Add(new Category((Dictionary<string, object>) obj));
         }
     }
 }

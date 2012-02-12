@@ -5,40 +5,39 @@ namespace Brahmastra.FoursquareAPI.Entities
 {
     public class Venues : Response
     {
-        public int count = 0;
-        public List<Venue> venues = new List<Venue>();
+        public List<Venue> Venue { get; set; }
 
-        public Venues(Dictionary<string, object> JSONDictionary)
-            : base(JSONDictionary)
+        public int Count { get; private set; }
+
+        public Venues(Dictionary<string, object> jsonDictionary)
+            : base(jsonDictionary)
         {
-            JSONDictionary = Helpers.extractDictionary(JSONDictionary, "response");
-            if (JSONDictionary["venues"].GetType() == typeof(System.Object[]))
+            Count = 0;
+            Venue = new List<Venue>();
+            jsonDictionary = Helpers.ExtractDictionary(jsonDictionary, "response");
+            if (jsonDictionary["venues"].GetType() == typeof(System.Object[]))
             {
-                foreach (object Obj in (object[])JSONDictionary["venues"])
+                foreach (var obj in (object[])jsonDictionary["venues"])
                 {
-                    venues.Add(new Venue((Dictionary<string, object>)Obj));
+                    Venue.Add(new Venue((Dictionary<string, object>)obj));
                 }
-                count = venues.Count;
+                Count = Venue.Count;
             }
             else
             {
-                JSONDictionary = Helpers.extractDictionary(JSONDictionary, "venues");
-                if (JSONDictionary.ContainsKey("count"))
+                jsonDictionary = Helpers.ExtractDictionary(jsonDictionary, "venues");
+                if (jsonDictionary.ContainsKey("count"))
+                    Count = (int) jsonDictionary["count"];
+                foreach (var obj in (object[])jsonDictionary["items"])
                 {
-                    count = (int)JSONDictionary["count"];
-                }
-                foreach (object Obj in (object[])JSONDictionary["items"])
-                {
-                    Dictionary<string, object> VenueHistoryObj = (Dictionary<string, object>)Obj;
-                    int beenHere = 0;
-                    if (VenueHistoryObj.ContainsKey("beenHere"))
-                    {
-                        beenHere = (int)VenueHistoryObj["beenHere"];
-                    }
-
-                    Venue Venue = new Venue((Dictionary<string, object>)((Dictionary<string, object>)Obj)["venue"]);
-                    Venue.beenHere = beenHere;
-                    venues.Add(Venue);
+                    var venueHistoryObj = (Dictionary<string, object>)obj;
+                    var beenHere = 0;
+                    if (venueHistoryObj.ContainsKey("beenHere"))
+                        beenHere = (int) venueHistoryObj["beenHere"];
+                    //(Dictionary<string, object>) ((Dictionary<string, object>) obj)["venue"]
+                    var venue = new Venue(Helpers.ExtractDictionary((Dictionary<string, object>) obj,"venue"))
+                                    {BeenHere = beenHere};
+                    Venue.Add(venue);
                 }
             }
         }

@@ -6,29 +6,34 @@ namespace Brahmastra.FoursquareAPI.Entities
 {
     public class BadgeSet
     {
-        public string type = "";
-        public string name = "";
-        public Image image;
-        public List<string> items = new List<string>();
-        public List<BadgeSet> groups = new List<BadgeSet>();
-        private string JSON = "";
+        internal string Json;
 
-        public BadgeSet(Dictionary<string, object> JSONDictionary)
+        public List<BadgeSet> Groups { get; private set; }
+        public List<string> Items { get; private set; }
+        public Image Image { get; private set; }
+        public string Name { get; private set; }
+        public string Type { get; private set; }
+        
+        public BadgeSet(Dictionary<string, object> jsonDictionary)
         {
-            JSON = Helpers.JSONSerializer(JSONDictionary);
-            type = JSONDictionary["type"].ToString();
-            name = JSONDictionary["name"].ToString();
-            image = new Image((Dictionary<string, object>)JSONDictionary["image"]);
+            Items = new List<string>();
+            Groups = new List<BadgeSet>();
+            Json = Helpers.JsonSerializer(jsonDictionary);
+            Type = jsonDictionary["type"].ToString();
+            Name = jsonDictionary["name"].ToString();
+            Image = new Image((Dictionary<string, object>)jsonDictionary["image"]);
 
-            foreach (object Obj in (object[])JSONDictionary["items"])
+            foreach (object obj in (object[])jsonDictionary["items"])
             {
-                items.Add((string)Obj);
+                Items.Add((string)obj);
             }
 
-            foreach (object Obj in (object[])JSONDictionary["groups"])
+            foreach (object obj in (object[])jsonDictionary["groups"])
             {
-                groups.Add(new BadgeSet((Dictionary<string, object>)Obj));
+                Groups.Add(new BadgeSet((Dictionary<string, object>)obj));
             }
         }
+
+        
     }
 }

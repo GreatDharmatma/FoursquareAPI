@@ -5,51 +5,45 @@ namespace Brahmastra.FoursquareAPI.Entities
 {
     public class RecommendedVenues : Response
     {
-        public Dictionary<string, string> keywords = new Dictionary<string, string>();
-        public string warning = "";
-        public Dictionary<string, List<Recommends>> places = new Dictionary<string, List<Recommends>>();
+        public Dictionary<string, string> Keywords { get; private set; }
+        public string Warning { get; private set; }
+        public Dictionary<string, List<Recommends>> Places { get; private set; }
 
-        public RecommendedVenues(Dictionary<string, object> JSONDictionary)
-            : base(JSONDictionary)
+        public RecommendedVenues(Dictionary<string, object> jsonDictionary)
+            : base(jsonDictionary)
         {
-            JSONDictionary = Helpers.extractDictionary(JSONDictionary, "response");
-            foreach (object Obj in (object[])((Dictionary<string, object>)JSONDictionary["keywords"])["items"])
+            Places = new Dictionary<string, List<Recommends>>();
+            Warning = "";
+            Keywords = new Dictionary<string, string>();
+            jsonDictionary = Helpers.ExtractDictionary(jsonDictionary, "response");
+            foreach (var obj in (object[]) ((Dictionary<string, object>) jsonDictionary["keywords"])["items"])
+                Keywords.Add(((Dictionary<string, object>) obj)["displayName"].ToString(),
+                             ((Dictionary<string, object>) obj)["keyword"].ToString());
+            if (jsonDictionary.ContainsKey("warning"))
+                Warning = ((Dictionary<string, object>) jsonDictionary["warning"])["text"].ToString();
+            foreach (var groupObj in ((object[])jsonDictionary["groups"]))
             {
-                keywords.Add(((Dictionary<string, object>)Obj)["displayName"].ToString(), ((Dictionary<string, object>)Obj)["keyword"].ToString());
-            }
-            if (JSONDictionary.ContainsKey("warning"))
-            {
-                warning = ((Dictionary<string, object>)JSONDictionary["warning"])["text"].ToString();
-            }
-            foreach (object GroupObj in ((object[])JSONDictionary["groups"]))
-            {
-                string Type = ((Dictionary<string, object>)GroupObj)["type"].ToString();
-
-                List<Recommends> recs = new List<Recommends>();
-                foreach (object ItemObj in (object[])((Dictionary<string, object>)GroupObj)["items"])
+                var type = ((Dictionary<string, object>)groupObj)["type"].ToString();
+                var recs = new List<Recommends>();
+                foreach (var itemObj in (object[])((Dictionary<string, object>)groupObj)["items"])
                 {
-                    Recommends r = new Recommends();
-                    r.tips = new List<Tip>();
-                    r.reasons = new List<Reason>();
+                    var r = new Recommends {
+                        Venue = new Venue((Dictionary<string, object>) ((Dictionary<string, object>) itemObj)["venue"])};
 
-                    r.venue = new Venue((Dictionary<string, object>)((Dictionary<string, object>)ItemObj)["venue"]);
-                    if (((Dictionary<string, object>)ItemObj).ContainsKey("tips"))
+                    if (((Dictionary<string, object>) itemObj).ContainsKey("tips"))
+                        foreach (var tipObj in (object[]) ((Dictionary<string, object>) itemObj)["tips"])
+                            r.Tips.Add(new Tip((Dictionary<string, object>) tipObj));
+                    foreach (var reasonObj in (object[])Helpers.ExtractDictionary((Dictionary<string, object>)itemObj, "reasons")["items"])
                     {
-                        foreach (object TipObj in (object[])((Dictionary<string, object>)ItemObj)["tips"])
-                        {
-                            r.tips.Add(new Tip((Dictionary<string, object>)TipObj));
-                        }
-                    }
-                    foreach (object ReasonObj in (object[])Helpers.extractDictionary((Dictionary<string, object>)ItemObj, "reasons")["items"])
-                    {
-                        Reason reas = new Reason();
-                        reas.type = ((Dictionary<string, object>)ReasonObj)["type"].ToString();
-                        reas.message = ((Dictionary<string, object>)ReasonObj)["message"].ToString();
-                        r.reasons.Add(reas);
+                        var reas = new Reason { 
+                            Type = ((Dictionary<string, object>) reasonObj)["type"].ToString(),
+                            Message = ((Dictionary<string, object>) reasonObj)["message"].ToString()};
+
+                        r.Reasons.Add(reas);
                     }
                     recs.Add(r);
                 }
-                places.Add(Type, recs);
+                Places.Add(type, recs);
             }
         }
 

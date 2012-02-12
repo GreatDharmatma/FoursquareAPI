@@ -5,13 +5,13 @@ namespace Brahmastra.FoursquareAPI.Entities
 {
     public class Provider : Response
     {
-        public string id = "";
+        public string Id { get; private set; }
 
-        public Provider(Dictionary<string, object> JSONDictionary)
-            : base(JSONDictionary)
+        public Provider(Dictionary<string, object> jsonDictionary)
+            : base(jsonDictionary)
         {
-            JSONDictionary = Helpers.extractDictionary(JSONDictionary, "provider");
-            id = Helpers.getDictionaryValue(JSONDictionary, "id");
+            jsonDictionary = Helpers.ExtractDictionary(jsonDictionary, "provider");
+            Id = Helpers.GetDictionaryValue(jsonDictionary, "id");
         }
     }
 }

@@ -5,15 +5,17 @@ namespace Brahmastra.FoursquareAPI.Entities
 {
     public class LeaderboardItem
     {
-        public int Rank;
-        public User User;
-        public Score Score;
+        internal string Json;
 
-        public LeaderboardItem(Dictionary<string, object> JSONDictionary)
+        public Score ScoreThisWeek { get; private set; }
+        public User LeaderBoardUser { get; private set; }
+        public Int32 RankThisWeek { get; private set; }
+
+        public LeaderboardItem(Dictionary<string, object> jsonDictionary)
         {
-            Rank = Int32.Parse(JSONDictionary["rank"].ToString());
-            User = new User((Dictionary<string, object>)JSONDictionary["user"]);
-            Score = new Score((Dictionary<string, object>)JSONDictionary["scores"]);
+            RankThisWeek = Int32.Parse(jsonDictionary["rank"].ToString());
+            LeaderBoardUser = new User((Dictionary<string, object>)jsonDictionary["user"]);
+            ScoreThisWeek = new Score((Dictionary<string, object>)jsonDictionary["scores"]);
         }
     }
 }

@@ -5,22 +5,22 @@ namespace Brahmastra.FoursquareAPI.Entities
 {
     public class Image
     {
-        public string prefix = "";
-        public string name = "";
-        public List<string> sizes = new List<string>();
-        private string JSON = "";
+        internal string Json = "";
 
-        public Image(Dictionary<string, object> JSONDictionary)
+        public string Prefix { get; private set; }
+        public string Name { get; private set; }
+        public List<string> Sizes { get; private set; }
+
+        public Image(Dictionary<string, object> jsonDictionary)
         {
-            JSON = Helpers.JSONSerializer(JSONDictionary);
+            Sizes = new List<string>();
+            Json = Helpers.JsonSerializer(jsonDictionary);
 
-            prefix = JSONDictionary["prefix"].ToString();
-            name = JSONDictionary["name"].ToString();
+            Prefix = jsonDictionary["prefix"].ToString();
+            Name = jsonDictionary["name"].ToString();
 
-            foreach (object Size in ((object[])JSONDictionary["sizes"]))
-            {
-                sizes.Add(Size.ToString());
-            }
+            foreach (var size in ((object[]) jsonDictionary["sizes"]))
+                Sizes.Add(size.ToString());
         }
     }
 }

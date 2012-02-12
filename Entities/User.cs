@@ -6,99 +6,99 @@ namespace Brahmastra.FoursquareAPI.Entities
 {
     public class User : Response
     {
-        public string id = "";
-        public string firstName = "";
-        public string lastName = "";
-        public string homeCity = "";
-        public string photo = "";
-        public string gender = "";
-        public string relationship = "";
-        public string type = "";
-        public Contact contact;
-        public string pings = "";
-        public string badges = "0";
-        public Checkins checkins;
-        public string mayorships = "0";
-        public List<Venue> mayorshipItems = new List<Venue>();
-        public string tips = "0";
-        public string todos = "0";
-        public string friends = "0";
-        public string followers = "0";
-        public string requests = "0";
-        public Score scores;
-
-        public User(Dictionary<string, object> JSONDictionary)
-            : base(JSONDictionary)
+        public string Id { get; private set; }
+        public string FirstName { get; private set; }
+        public string LastName { get; private set; }
+        public string HomeCity { get; private set; }
+        public string Photo { get; private set; }
+        public string Gender { get; private set; }
+        public string Relationship { get; private set; }
+        public string Type { get; private set; }
+        public Contact Contact { get; private set; }
+        public string Pings { get; private set; }
+        public string Badges { get; private set; }
+        public Checkins Checkins { get; private set; }
+        public string Mayorships { get; private set; }
+        public List<Venue> MayorshipItems { get; private set; }
+        public string Tips { get; private set; }
+        public string Friends { get; private set; }
+        public string Todos { get; private set; }
+        public string Followers { get; private set; }
+        public string Requests { get; private set; }
+        public Score Scores { get; private set; }
+        
+        public User(Dictionary<string, object> jsonDictionary)
+            : base(jsonDictionary)
         {
-            JSONDictionary = Helpers.extractDictionary(JSONDictionary, "response:user");
+            Requests = "0";
+            Followers = "0";
+            Todos = "0";
+            Friends = "0";
+            Tips = "0";
+            MayorshipItems = new List<Venue>();
+            Mayorships = "0";
+            Badges = "0";
+            jsonDictionary = Helpers.ExtractDictionary(jsonDictionary, "response:user");
 
-            id = Helpers.getDictionaryValue(JSONDictionary, "id");
+            Id = Helpers.GetDictionaryValue(jsonDictionary, "id");
 
-            firstName = Helpers.getDictionaryValue(JSONDictionary, "firstName");
-            lastName = Helpers.getDictionaryValue(JSONDictionary, "lastName");
-            homeCity = Helpers.getDictionaryValue(JSONDictionary, "homeCity");
+            FirstName = Helpers.GetDictionaryValue(jsonDictionary, "firstName");
+            LastName = Helpers.GetDictionaryValue(jsonDictionary, "lastName");
+            HomeCity = Helpers.GetDictionaryValue(jsonDictionary, "homeCity");
 
-            photo = Helpers.getDictionaryValue(JSONDictionary, "photo");
-            gender = Helpers.getDictionaryValue(JSONDictionary, "gender");
-            relationship = Helpers.getDictionaryValue(JSONDictionary, "relationship");
+            Photo = Helpers.GetDictionaryValue(jsonDictionary, "photo");
+            Gender = Helpers.GetDictionaryValue(jsonDictionary, "gender");
+            Relationship = Helpers.GetDictionaryValue(jsonDictionary, "relationship");
 
-            photo = Helpers.getDictionaryValue(JSONDictionary, "photo");
-            gender = Helpers.getDictionaryValue(JSONDictionary, "gender");
-            relationship = Helpers.getDictionaryValue(JSONDictionary, "relationship");
+            Photo = Helpers.GetDictionaryValue(jsonDictionary, "photo");
+            Gender = Helpers.GetDictionaryValue(jsonDictionary, "gender");
+            Relationship = Helpers.GetDictionaryValue(jsonDictionary, "relationship");
 
-            if (JSONDictionary.ContainsKey("badges"))
+            if (jsonDictionary.ContainsKey("badges"))
+                Badges = Helpers.ExtractDictionary(jsonDictionary, "badges")["count"].ToString();
+
+            if (jsonDictionary.ContainsKey("mayorships"))
             {
-                badges = Helpers.extractDictionary(JSONDictionary, "badges")["count"].ToString();
+                Mayorships = Helpers.ExtractDictionary(jsonDictionary, "mayorships")["count"].ToString();
+                foreach (var obj in (Object[]) Helpers.ExtractDictionary(jsonDictionary, "mayorships")["items"])
+                    MayorshipItems.Add(new Venue((Dictionary<string, object>) obj));
             }
-            if (JSONDictionary.ContainsKey("mayorships"))
+            if (jsonDictionary.ContainsKey("checkins"))
+                Checkins = new Checkins(Helpers.ExtractDictionary(jsonDictionary, "checkins"));
+
+            if (jsonDictionary.ContainsKey("friends"))
             {
-                mayorships = Helpers.extractDictionary(JSONDictionary, "mayorships")["count"].ToString();
-                foreach (object Obj in (Object[])Helpers.extractDictionary(JSONDictionary, "mayorships")["items"])
-                {
-                    mayorshipItems.Add(new Venue((Dictionary<string, object>)Obj));
-                }
-            }
-            if (JSONDictionary.ContainsKey("checkins"))
-            {
-                checkins = new Checkins(Helpers.extractDictionary(JSONDictionary, "checkins"));
-            }
-            if (JSONDictionary.ContainsKey("friends"))
-            {
-                friends = Helpers.extractDictionary(JSONDictionary, "friends")["count"].ToString();
+                Friends = Helpers.ExtractDictionary(jsonDictionary, "friends")["count"].ToString();
                 //Todo: if the count >0, get the items
             }
-            if (JSONDictionary.ContainsKey("followers"))
+            if (jsonDictionary.ContainsKey("followers"))
             {
-                followers = Helpers.extractDictionary(JSONDictionary, "followers")["count"].ToString();
+                Followers = Helpers.ExtractDictionary(jsonDictionary, "followers")["count"].ToString();
                 //Todo: if the count >0, get the items
             }
-            if (JSONDictionary.ContainsKey("requests"))
+            if (jsonDictionary.ContainsKey("requests"))
             {
-                requests = Helpers.extractDictionary(JSONDictionary, "requests")["count"].ToString();
+                Requests = Helpers.ExtractDictionary(jsonDictionary, "requests")["count"].ToString();
                 //Todo: if the count >0, get the items
             }
-            if (JSONDictionary.ContainsKey("tips"))
+            if (jsonDictionary.ContainsKey("tips"))
             {
-                tips = Helpers.extractDictionary(JSONDictionary, "tips")["count"].ToString();
+                Tips = Helpers.ExtractDictionary(jsonDictionary, "tips")["count"].ToString();
                 //Todo: if the count >0, get the items
             }
-            if (JSONDictionary.ContainsKey("todos"))
+            if (jsonDictionary.ContainsKey("todos"))
             {
-                todos = Helpers.extractDictionary(JSONDictionary, "todos")["count"].ToString();
+                Todos = Helpers.ExtractDictionary(jsonDictionary, "todos")["count"].ToString();
                 //Todo: if the count >0, get the items
             }
 
-            type = Helpers.getDictionaryValue(JSONDictionary, "type");
-            if (JSONDictionary.ContainsKey("contact"))
-            {
-                contact = new Contact(Helpers.extractDictionary(JSONDictionary,"contact"));
-            }
-            pings = Helpers.getDictionaryValue(JSONDictionary, "pings");
+            Type = Helpers.GetDictionaryValue(jsonDictionary, "type");
+            if (jsonDictionary.ContainsKey("contact"))
+                Contact = new Contact(Helpers.ExtractDictionary(jsonDictionary, "contact"));
 
-            if (JSONDictionary.ContainsKey("scores"))
-            {
-                scores = new Score(Helpers.extractDictionary(JSONDictionary, "scores"));
-            }
+            Pings = Helpers.GetDictionaryValue(jsonDictionary, "pings");
+            if (jsonDictionary.ContainsKey("scores"))
+                Scores = new Score(Helpers.ExtractDictionary(jsonDictionary, "scores"));
         }
     }
 }

@@ -5,56 +5,47 @@ namespace Brahmastra.FoursquareAPI.Entities
 {
     public class Photo : Response
     {
-        public string id = "";
-        public string createdAt = "";
-        public string url = "";
-        public List<PhotoSize> sizes = new List<PhotoSize>();
-        public Source source;
-        public User user;
-        public Venue venue;
-        public Tip tip;
-        public Checkin checkin;
+        public string Id { get; private set; }
+        public string CreatedAt { get; private set; }
+        public string Url { get; private set; }
+        public List<PhotoSize> Sizes { get; private set; }
+        public Source Source { get; private set; }
+        public User User { get; private set; }
+        public Venue Venue { get; private set; }
+        public Tip Tip { get; private set; }
+        public Checkin Checkin { get; private set; }
 
-        public Photo(Dictionary<string, object> JSONDictionary)
-            : base(JSONDictionary)
+        public Photo(Dictionary<string, object> jsonDictionary)
+            : base(jsonDictionary)
         {
-            JSONDictionary = Helpers.extractDictionary(JSONDictionary, "response:photo");
-            id = JSONDictionary["id"].ToString();
-            createdAt = JSONDictionary["createdAt"].ToString();
-            url = JSONDictionary["url"].ToString();
+            Sizes = new List<PhotoSize>();
+            jsonDictionary = Helpers.ExtractDictionary(jsonDictionary, "response:photo");
+            Id = jsonDictionary["id"].ToString();
+            CreatedAt = jsonDictionary["createdAt"].ToString();
+            Url = jsonDictionary["url"].ToString();
 
-            if (JSONDictionary.ContainsKey("sizes"))
+            if (jsonDictionary.ContainsKey("sizes"))
+                foreach (var sizeObj in (object[]) Helpers.ExtractDictionary(jsonDictionary, "sizes")["items"])
+                    Sizes.Add(new PhotoSize((Dictionary<string, object>) sizeObj));
+
+            if (jsonDictionary.ContainsKey("source"))
             {
-                foreach (object SizeObj in (object[])Helpers.extractDictionary(JSONDictionary, "sizes")["items"])
-                {
-                    sizes.Add(new PhotoSize((Dictionary<string, object>)SizeObj));
-                }
+                Source = new Source((Dictionary<string,object>) jsonDictionary["source"]);
             }
 
-            if (JSONDictionary.ContainsKey("source"))
+            if (jsonDictionary.ContainsKey("user"))
+                User = new User((Dictionary<string, object>) jsonDictionary["user"]);
+
+            if (jsonDictionary.ContainsKey("venue"))
+                Venue = new Venue((Dictionary<string, object>) jsonDictionary["venue"]);
+
+            if (jsonDictionary.ContainsKey("tip"))
             {
-                //todo
+                Tip = new Tip((Dictionary<string, object>)jsonDictionary["tip"]);
             }
 
-            if (JSONDictionary.ContainsKey("user"))
-            {
-                user = new User((Dictionary<string, object>)JSONDictionary["user"]);
-            }
-
-            if (JSONDictionary.ContainsKey("venue"))
-            {
-                venue = new Venue((Dictionary<string, object>)JSONDictionary["venue"]);
-            }
-
-            if (JSONDictionary.ContainsKey("tip"))
-            {
-                //todo
-            }
-
-            if (JSONDictionary.ContainsKey("checkin"))
-            {
-                checkin = new Checkin((Dictionary<string, object>)JSONDictionary["checkin"]);
-            }
+            if (jsonDictionary.ContainsKey("checkin"))
+                Checkin = new Checkin((Dictionary<string, object>) jsonDictionary["checkin"]);
         }
     }
 }

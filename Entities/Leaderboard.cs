@@ -6,18 +6,16 @@ namespace Brahmastra.FoursquareAPI.Entities
 {
     public class Leaderboard : Response
     {
-        public List<LeaderboardItem> leaderboard = new List<LeaderboardItem>();
+        public List<LeaderboardItem> Board { get; private set; }
 
-        public Leaderboard(Dictionary<string, object> JSONDictionary)
-            : base(JSONDictionary)
+        public Leaderboard(Dictionary<string, object> jsonDictionary)
+            : base(jsonDictionary)
         {
-            if (metaCode.Equals("200"))
-            {
-                foreach (Object Obj in (Object[])Helpers.extractDictionary(JSONDictionary, "response:leaderboard")["items"])
-                {
-                    leaderboard.Add(new LeaderboardItem((Dictionary<string, object>)Obj));
-                }
-            }
+            Board = new List<LeaderboardItem>();
+            if (MetaCode.Equals("200"))
+                foreach (
+                    var obj in (Object[]) Helpers.ExtractDictionary(jsonDictionary, "response:leaderboard")["items"])
+                    Board.Add(new LeaderboardItem((Dictionary<string, object>) obj));
         }
     }
 }

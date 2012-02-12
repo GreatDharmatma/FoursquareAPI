@@ -5,15 +5,16 @@ namespace Brahmastra.FoursquareAPI.Entities
 {
     public class Settings : Response
     {
-        List<Setting> settings = new List<Setting>();
+        public List<Setting> Setting { get; private set; }
 
-        public Settings(Dictionary<string, object> JSONDictionary)
-            : base(JSONDictionary)
+        public Settings(Dictionary<string, object> jsonDictionary)
+            : base(jsonDictionary)
         {
-            JSONDictionary = Helpers.extractDictionary(JSONDictionary, "response:settings");
-            foreach (object Obj in JSONDictionary)
+            Setting = new List<Setting>();
+            jsonDictionary = Helpers.ExtractDictionary(jsonDictionary, "response:settings");
+            foreach (var obj in jsonDictionary)
             {
-                settings.Add(new Setting(((System.Collections.Generic.KeyValuePair<string, object>)Obj).Key, ((System.Collections.Generic.KeyValuePair<string, object>)Obj).Value.ToString()));
+                Setting.Add(new Setting(obj.Key, obj.Value.ToString()));
             }
         }
     }

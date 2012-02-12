@@ -5,43 +5,38 @@ namespace Brahmastra.FoursquareAPI.Entities
 {
     public class Checkins : Response
     {
-        public int count = 0;
-        public List<Checkin> checkins = new List<Checkin>();
+        public List<Checkin> CheckinsList { get; private set; }
+        public int Count { get; private set; }
 
-        public Checkins(Dictionary<string, object> JSONDictionary)
-            : base(JSONDictionary)
+        public Checkins(Dictionary<string, object> jsonDictionary)
+            : base(jsonDictionary)
         {
-            Dictionary<string, object> itemsDictionary = Helpers.extractDictionary(JSONDictionary, "response");
+            Count = 0;
+            CheckinsList = new List<Checkin>();
+            var itemsDictionary = Helpers.ExtractDictionary(jsonDictionary, "response");
             if (itemsDictionary.ContainsKey("recent"))
             {
-                object[] Items = ((object[])itemsDictionary["recent"]);
+                var items = ((object[])itemsDictionary["recent"]);
+                foreach (var obj in items)
+                    CheckinsList.Add(new Checkin((Dictionary<string, object>) obj));
 
-                foreach (object obj in Items)
-                {
-                    checkins.Add(new Checkin((Dictionary<string, object>)obj));
-                }
-                count = checkins.Count;
+                Count = CheckinsList.Count;
             }
             if (itemsDictionary.ContainsKey("hereNow"))
-            {
-                itemsDictionary = Helpers.extractDictionary(itemsDictionary, "hereNow");
-            }
+                itemsDictionary = Helpers.ExtractDictionary(itemsDictionary, "hereNow");
+
             if (itemsDictionary.ContainsKey("checkins"))
-            {
-                itemsDictionary = Helpers.extractDictionary(itemsDictionary, "checkins");
-            }
+                itemsDictionary = Helpers.ExtractDictionary(itemsDictionary, "checkins");
+
             if (itemsDictionary.ContainsKey("count"))
-            {
-                count = (int)itemsDictionary["count"];
-            }
+                Count = (int) itemsDictionary["count"];
+
             if (itemsDictionary.ContainsKey("items"))
             {
-                object[] Items = ((object[])itemsDictionary["items"]);
+                var items = ((object[])itemsDictionary["items"]);
 
-                foreach (object obj in Items)
-                {
-                    checkins.Add(new Checkin((Dictionary<string, object>)obj));
-                }
+                foreach (var obj in items)
+                    CheckinsList.Add(new Checkin((Dictionary<string, object>) obj));
             }
         }
     }

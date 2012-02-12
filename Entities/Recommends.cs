@@ -7,8 +7,14 @@ namespace Brahmastra.FoursquareAPI.Entities
 {
     public class Recommends
     {
-        public List<Reason> reasons;
-        public Venue venue;
-        public List<Tip> tips;
+        public List<Tip> Tips { get; set; }
+        public Venue Venue { get; set; }
+        public List<Reason> Reasons { get; set; }
+
+        public Recommends()
+        {
+            Tips = new List<Tip>();
+            Reasons = new List<Reason>();
+        }
     }
 }

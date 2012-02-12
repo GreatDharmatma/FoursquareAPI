@@ -2,13 +2,14 @@
 {
     public class Setting
     {
-        string setting = "";
-        string value = "";
+        public string Value { get; private set; }
 
-        public Setting(string Setting, string Value)
+        public string Settings { get; private set; }
+
+        public Setting(string setting, string value)
         {
-            setting = Setting;
-            value = Value;
+            Settings = setting;
+            Value = value;
         }
     }
 }

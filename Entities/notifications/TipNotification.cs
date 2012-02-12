@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 
 namespace Brahmastra.FoursquareAPI.Entities.Notifications

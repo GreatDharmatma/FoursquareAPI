@@ -5,21 +5,20 @@ namespace Brahmastra.FoursquareAPI.Entities
 {
     public class Links : Response
     {
-        public int count = 0;
-        List<Link> links = new List<Link>();
+        public int Count { get; private set; }
+        public List<Link> VenueLink { get; private set; }
 
-        public Links(Dictionary<string, object> JSONDictionary)
-            : base(JSONDictionary)
+        public Links(Dictionary<string, object> jsonDictionary)
+            : base(jsonDictionary)
         {
-            JSONDictionary = Helpers.extractDictionary(JSONDictionary, "response:links");
-            if (JSONDictionary.ContainsKey("count"))
-            {
-                count = (int)JSONDictionary["count"];
-            }
-            foreach (object Obj in (object[])JSONDictionary["items"])
-            {
-                links.Add(new Link((Dictionary<string, object>)Obj));
-            }
+            VenueLink = new List<Link>();
+            Count = 0;
+            jsonDictionary = Helpers.ExtractDictionary(jsonDictionary, "response:links");
+            if (jsonDictionary.ContainsKey("count"))
+                Count = (int) jsonDictionary["count"];
+
+            foreach (var obj in (object[]) jsonDictionary["items"])
+                VenueLink.Add(new Link((Dictionary<string, object>) obj));
         }
     }
 }

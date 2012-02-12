@@ -5,35 +5,32 @@ namespace Brahmastra.FoursquareAPI.Entities
 {
     public class BadgeSets : Response
     {
-        public string defaultSetType = "";
-        public List<BadgeSet> badgeSets = new List<BadgeSet>();
-        public List<Badge> badges = new List<Badge>();
+        public List<BadgeSet> BadgeSet { get; private set; }
+        public List<Badge> Badges { get; private set; }
+        public string DefaultSetType { get; private set; }
 
-        public BadgeSets(Dictionary<string, object> JSONDictionary)
-            : base(JSONDictionary)
+        public BadgeSets(Dictionary<string, object> jsonDictionary)
+            : base(jsonDictionary)
         {
-            JSONDictionary = Helpers.extractDictionary(JSONDictionary, "response");
+            DefaultSetType = "";
+            Badges = new List<Badge>();
+            BadgeSet = new List<BadgeSet>();
+            jsonDictionary = Helpers.ExtractDictionary(jsonDictionary, "response");
 
-            if (JSONDictionary.ContainsKey("defaultSetType"))
-            {
-                defaultSetType = JSONDictionary["defaultSetType"].ToString();
-            }
+            if (jsonDictionary.ContainsKey("defaultSetType"))
+                DefaultSetType = jsonDictionary["defaultSetType"].ToString();
 
-            if (JSONDictionary.ContainsKey("badges"))
-            {
-                foreach (KeyValuePair<string, object> Obj in (Dictionary<string, object>)JSONDictionary["badges"])
+            if (jsonDictionary.ContainsKey("badges"))
+                foreach (var obj in (Dictionary<string, object>) jsonDictionary["badges"])
                 {
-                    badges.Add(new Badge((Dictionary<string, object>)Obj.Value));
+                    Badges.Add(new Badge((Dictionary<string, object>) obj.Value));
                 }
-            }
 
-            if (JSONDictionary.ContainsKey("sets"))
-            {
-                foreach (object Obj in (object[])((Dictionary<string, object>)JSONDictionary["sets"])["groups"])
+            if (jsonDictionary.ContainsKey("sets"))
+                foreach (var obj in (object[]) ((Dictionary<string, object>) jsonDictionary["sets"])["groups"])
                 {
-                    badgeSets.Add(new BadgeSet((Dictionary<string, object>)Obj));
+                    BadgeSet.Add(new BadgeSet((Dictionary<string, object>) obj));
                 }
-            }
         }
     }
 }

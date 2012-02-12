@@ -5,30 +5,31 @@ namespace Brahmastra.FoursquareAPI.Entities
 {
     public class Location
     {
-        public string Address = "";
-        public string CrossStreet = "";
-        public string City = "";
-        public string State = "";
-        public string PostalCode = "";
-        public string Country = "";
-        public string Lat = "";
-        public string Long = "";
-        public string Distance = "";
-        private string JSON = "";
+        internal string Json = "";
 
-        public Location(Dictionary<string, object> JSONDictionary)
+        public string Distance { get; private set; }
+        public string Longitude { get; private set; }
+        public string Latitude { get; private set; }
+        public string Country { get; private set; }
+        public string PostalCode { get; private set; }
+        public string State { get; private set; }
+        public string City { get; private set; }
+        public string CrossStreet { get; private set; }
+        public string Address { get; private set; }
+
+        public Location(Dictionary<string, object> jsonDictionary)
         {
-            JSON = Helpers.JSONSerializer(JSONDictionary);
+            Json = Helpers.JsonSerializer(jsonDictionary);
 
-            Address = Helpers.getDictionaryValue(JSONDictionary, "address");
-            CrossStreet = Helpers.getDictionaryValue(JSONDictionary, "crossStreet");
-            City = Helpers.getDictionaryValue(JSONDictionary, "city");
-            State = Helpers.getDictionaryValue(JSONDictionary, "state");
-            PostalCode = Helpers.getDictionaryValue(JSONDictionary, "postalCode");
-            Country = Helpers.getDictionaryValue(JSONDictionary, "country");
-            Lat = Helpers.getDictionaryValue(JSONDictionary, "lat");
-            Long = Helpers.getDictionaryValue(JSONDictionary, "lng");
-            Distance = Helpers.getDictionaryValue(JSONDictionary, "distance");
+            Address = Helpers.GetDictionaryValue(jsonDictionary, "address");
+            CrossStreet = Helpers.GetDictionaryValue(jsonDictionary, "crossStreet");
+            City = Helpers.GetDictionaryValue(jsonDictionary, "city");
+            State = Helpers.GetDictionaryValue(jsonDictionary, "state");
+            PostalCode = Helpers.GetDictionaryValue(jsonDictionary, "postalCode");
+            Country = Helpers.GetDictionaryValue(jsonDictionary, "country");
+            Latitude = Helpers.GetDictionaryValue(jsonDictionary, "lat");
+            Longitude = Helpers.GetDictionaryValue(jsonDictionary, "lng");
+            Distance = Helpers.GetDictionaryValue(jsonDictionary, "distance");
         }
     }
 }

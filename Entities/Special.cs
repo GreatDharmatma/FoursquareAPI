@@ -6,51 +6,47 @@ namespace Brahmastra.FoursquareAPI.Entities
 {
     public class Special : Response
     {
-        public string id = "";
-        public string type = "";
-        public string message = "";
-        public string description = "";
-        public string finePrint = "";
-        public bool unlocked = false;
-        public string icon = "";
-        public string title = "";
-        public string state = "";
-        public string progress = "";
-        public string progressDescription = "";
-        public string detail = "";
-        public string target = "";
-        public List<User> friendsHere = new List<User>();
-        public Venue venue;
+        public string Id { get; private set; }
+        public string Type { get; private set; }
+        public string Message { get; private set; }
+        public string Description { get; private set; }
+        public string FinePrint { get; private set; }
+        public bool Unlocked { get; private set; }
+        public string Icon { get; private set; }
+        public string Title { get; private set; }
+        public string State { get; private set; }
+        public string Progress { get; private set; }
+        public string ProgressDescription { get; private set; }
+        public string Detail { get; private set; }
+        public string Target { get; private set; }
+        public List<User> FriendsHere { get; private set; }
+        public Venue Venue { get; private set; }
 
-        public Special(Dictionary<string, object> JSONDictionary)
-            : base(JSONDictionary)
+        public Special(Dictionary<string, object> jsonDictionary)
+            : base(jsonDictionary)
         {
+            FriendsHere = new List<User>();
+            Unlocked = false;
 
-            JSONDictionary = Helpers.extractDictionary(JSONDictionary, "response:special");
-            id = Helpers.getDictionaryValue(JSONDictionary, "id");
-            type = Helpers.getDictionaryValue(JSONDictionary, "type");
-            message = Helpers.getDictionaryValue(JSONDictionary, "message");
-            description = Helpers.getDictionaryValue(JSONDictionary, "description");
-            finePrint = Helpers.getDictionaryValue(JSONDictionary, "finePrint");
-            if (Helpers.getDictionaryValue(JSONDictionary, "unlocked").ToLower().Equals("true"))
-            {
-                unlocked = true;
-            }
-            icon = Helpers.getDictionaryValue(JSONDictionary, "icon");
-            title = Helpers.getDictionaryValue(JSONDictionary, "title");
-            state = Helpers.getDictionaryValue(JSONDictionary, "state");
-            progress = Helpers.getDictionaryValue(JSONDictionary, "progress");
-            progressDescription = Helpers.getDictionaryValue(JSONDictionary, "progressDescription");
-            detail = Helpers.getDictionaryValue(JSONDictionary, "detail");
-            target = Helpers.getDictionaryValue(JSONDictionary, "target");
-            if (JSONDictionary.ContainsKey("friendsHere"))
-            {
+            jsonDictionary = Helpers.ExtractDictionary(jsonDictionary, "response:special");
+            Id = Helpers.GetDictionaryValue(jsonDictionary, "id");
+            Type = Helpers.GetDictionaryValue(jsonDictionary, "type");
+            Message = Helpers.GetDictionaryValue(jsonDictionary, "message");
+            Description = Helpers.GetDictionaryValue(jsonDictionary, "description");
+            FinePrint = Helpers.GetDictionaryValue(jsonDictionary, "finePrint");
+            if (Helpers.GetDictionaryValue(jsonDictionary, "unlocked").ToLower().Equals("true"))
+                Unlocked = true;
+            Icon = Helpers.GetDictionaryValue(jsonDictionary, "icon");
+            Title = Helpers.GetDictionaryValue(jsonDictionary, "title");
+            State = Helpers.GetDictionaryValue(jsonDictionary, "state");
+            Progress = Helpers.GetDictionaryValue(jsonDictionary, "progress");
+            ProgressDescription = Helpers.GetDictionaryValue(jsonDictionary, "progressDescription");
+            Detail = Helpers.GetDictionaryValue(jsonDictionary, "detail");
+            Target = Helpers.GetDictionaryValue(jsonDictionary, "target");
+            if (jsonDictionary.ContainsKey("friendsHere"))
                 throw new Exception("Todo");
-            }
-            if (JSONDictionary.ContainsKey("venue"))
-            {
-                venue = new Venue((Dictionary<string, object>)JSONDictionary["venue"]);
-            }
+            if (jsonDictionary.ContainsKey("venue"))
+                Venue = new Venue((Dictionary<string, object>) jsonDictionary["venue"]);
         }
     }
 }

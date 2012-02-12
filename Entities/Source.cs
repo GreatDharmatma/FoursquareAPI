@@ -5,15 +5,16 @@ namespace Brahmastra.FoursquareAPI.Entities
 {
     public class Source
     {
-        public string name = "";
-        public string URL = "";
-        private string JSON = "";
+        internal string Json;
 
-        public Source(Dictionary<string, object> JSONDictionary)
+        public string Url { get; private set; }
+        public string Name { get; private set; }
+
+        public Source(Dictionary<string, object> jsonDictionary)
         {
-            JSON = Helpers.JSONSerializer(JSONDictionary);
-            name = JSONDictionary["name"].ToString();
-            URL = JSONDictionary["url"].ToString();
+            Json = Helpers.JsonSerializer(jsonDictionary);
+            Name = jsonDictionary["name"].ToString();
+            Url = jsonDictionary["url"].ToString();
         }
     }
 }

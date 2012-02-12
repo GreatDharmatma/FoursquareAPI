@@ -5,36 +5,23 @@ namespace Brahmastra.FoursquareAPI.Entities
 {
     public class Contact
     {
-        public string twitter = "";
-        public string facebook = "";
-        public string email = "";
-        public string phone = "";
-        public string formattedPhone = "";
-        private string JSON = "";
+        internal string Json = "";
 
-        public Contact(Dictionary<string, object> JSONDictionary)
+        public string FormattedPhone { get; private set; }
+        public string Phone { get; private set; }
+        public string Email { get; private set; }
+        public string Facebook { get; private set; }
+        public string Twitter { get; private set; }
+
+        public Contact(Dictionary<string, object> jsonDictionary)
         {
-            JSON = Helpers.JSONSerializer(JSONDictionary);
-            if (JSONDictionary.ContainsKey("twitter"))
-            {
-                twitter = Helpers.getDictionaryValue(JSONDictionary, "twitter");
-            }
-            if (JSONDictionary.ContainsKey("facebook"))
-            {
-                twitter = Helpers.getDictionaryValue(JSONDictionary, "facebook");
-            }
-            if (JSONDictionary.ContainsKey("email"))
-            {
-                twitter = Helpers.getDictionaryValue(JSONDictionary, "email");
-            }
-            if (JSONDictionary.ContainsKey("phone"))
-            {
-            	phone = Helpers.getDictionaryValue(JSONDictionary, "phone");
-            }
-            if (JSONDictionary.ContainsKey("formattedPhone"))
-            {
-                phone = Helpers.getDictionaryValue(JSONDictionary, "formattedPhone");
-            }
+            Json = Helpers.JsonSerializer(jsonDictionary);
+
+            Twitter = jsonDictionary.ContainsKey("twitter") ? Helpers.GetDictionaryValue(jsonDictionary, "twitter") : "-";
+            Facebook = jsonDictionary.ContainsKey("facebook") ? Helpers.GetDictionaryValue(jsonDictionary, "facebook") : "-";
+            Email = jsonDictionary.ContainsKey("email") ? Helpers.GetDictionaryValue(jsonDictionary, "email") : "-";
+            Phone = jsonDictionary.ContainsKey("phone") ? Helpers.GetDictionaryValue(jsonDictionary, "phone") : "-";
+            FormattedPhone = jsonDictionary.ContainsKey("formattedPhone") ? Helpers.GetDictionaryValue(jsonDictionary, "formattedPhone") : "-";
         }
     }
 }

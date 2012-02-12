@@ -5,19 +5,19 @@ namespace Brahmastra.FoursquareAPI.Entities
 {
     public class Comment : Response
     {
-        public string id;
-        public string createdAt;
-        public User user;
-        public string text;
+        public string Text { get; private set; }
+        public User User { get; private set; }
+        public string CreatedAt { get; private set; }
+        public string Id { get; private set; }
 
-        public Comment(Dictionary<string, object> JSONDictionary)
-            : base(JSONDictionary)
+        public Comment(Dictionary<string, object> jsonDictionary)
+            : base(jsonDictionary)
         {
-            JSONDictionary = Helpers.extractDictionary(JSONDictionary, "response:comment");
-            id = JSONDictionary["id"].ToString();
-            createdAt = JSONDictionary["createdAt"].ToString();
-            user = new User((Dictionary<string, object>)JSONDictionary["user"]);
-            text = JSONDictionary["text"].ToString();
+            jsonDictionary = Helpers.ExtractDictionary(jsonDictionary, "response:comment");
+            Id = jsonDictionary["id"].ToString();
+            CreatedAt = jsonDictionary["createdAt"].ToString();
+            User = new User((Dictionary<string, object>)jsonDictionary["user"]);
+            Text = jsonDictionary["text"].ToString();
         }
     }
 }

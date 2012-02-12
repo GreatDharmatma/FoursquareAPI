@@ -5,41 +5,31 @@ namespace Brahmastra.FoursquareAPI.Entities
 {
     public class Badge
     {
-        public string id = "";
-        public string badgeID = "";
-        public string name = "";
-        public string description = "";
-        public string hint = "";
-        public Image image;
-        public List<Checkin> unlocks = new List<Checkin>();
-        private string JSON = "";
+        internal string Json = "";
 
-        public Badge(Dictionary<string, object> JSONDictionary)
+        public List<Checkin> Unlocks { get; private set; }
+        public string Hint { get; private set; }
+        public string Description { get; private set; }
+        public string BadgeId { get; private set; }
+        public string Name { get; private set; }
+        public string Id { get; private set; }
+        public Image Image { get; private set; }
+
+        public Badge(Dictionary<string, object> jsonDictionary)
         {
-            JSON = Helpers.JSONSerializer(JSONDictionary);
-            id = JSONDictionary["id"].ToString();
-            if (JSONDictionary.ContainsKey("badgeID"))
+            Unlocks = new List<Checkin>();
+            Json = Helpers.JsonSerializer(jsonDictionary);
+            Id = jsonDictionary["id"].ToString();
+            BadgeId = jsonDictionary.ContainsKey("badgeID") ? jsonDictionary["badgeID"].ToString() : Id;
+            Name = jsonDictionary["name"].ToString();
+            Description = jsonDictionary.ContainsKey("description") ? jsonDictionary["description"].ToString() : "";
+            Hint = jsonDictionary.ContainsKey("hint") ? jsonDictionary["hint"].ToString() : "";
+            Image = new Image(((Dictionary<string, object>) jsonDictionary["image"]));
+            foreach (object obj in (object[]) Helpers.ExtractDictionary(jsonDictionary, "response")["unlocks"])
             {
-                badgeID = JSONDictionary["badgeID"].ToString();
-            }
-            else
-            {
-                badgeID = id;
-            }
-            name = JSONDictionary["name"].ToString();
-            if (JSONDictionary.ContainsKey("description"))
-            {
-                description = JSONDictionary["description"].ToString();
-            }
-            if (JSONDictionary.ContainsKey("hint"))
-            {
-                hint = JSONDictionary["hint"].ToString();
-            }
-            image = new Image(((Dictionary<string, object>)JSONDictionary["image"]));
-            foreach (object Obj in (object[])Helpers.extractDictionary(JSONDictionary, "response")["unlocks"])
-            {
-                Dictionary<string, object> unlockCheckin = (Dictionary<string, object>)((object[])((Dictionary<string, object>)Obj)["checkins"])[0];
-                unlocks.Add(new Checkin(unlockCheckin));
+                var unlockCheckin =
+                    (Dictionary<string, object>) ((object[]) ((Dictionary<string, object>) obj)["checkins"])[0];
+                Unlocks.Add(new Checkin(unlockCheckin));
             }
         }
     }
