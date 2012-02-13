@@ -1,11 +1,11 @@
 ﻿
 using System;
 using System.Collections.Generic;
-using Brahmastra.FoursquareAPI.Entities;
-using Brahmastra.FoursquareAPI.Entities.Notifications;
-using Brahmastra.FoursquareAPI.IO;
+using Brahmastra.FoursquareApi.Entities;
+using Brahmastra.FoursquareApi.Entities.Notifications;
+using Brahmastra.FoursquareApi.IO;
 
-namespace Brahmastra.FoursquareAPI
+namespace Brahmastra.FoursquareApi
 {
     public class Response
     {

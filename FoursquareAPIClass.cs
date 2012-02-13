@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using Brahmastra.FoursquareAPI.Entities;
-using Brahmastra.FoursquareAPI.IO;
+using Brahmastra.FoursquareApi.Entities;
+using Brahmastra.FoursquareApi.IO;
 
-namespace Brahmastra.FoursquareAPI
+namespace Brahmastra.FoursquareApi
 {
     internal class FoursquareApiClass
     {
@@ -28,10 +28,10 @@ namespace Brahmastra.FoursquareAPI
             if (userId.Equals(""))
                 userId = "self";
             var get = new HttpGet();
-            var endPoint = "https://api.foursquare.com/v2/users/" + userId + "?callback=XXX&v=" + Version +
+            string endPoint = "https://api.foursquare.com/v2/users/" + userId + "?callback=XXX&v=" + Version +
                               "&oauth_token=" + _accessToken;
             get.Request(endPoint);
-            var jsonDictionary = Helpers.JsonDeserializer(get.ResponseBody);
+            Dictionary<string, object> jsonDictionary = Helpers.JsonDeserializer(get.ResponseBody);
             return new User(jsonDictionary);
         }
 
@@ -49,11 +49,11 @@ namespace Brahmastra.FoursquareAPI
         public Leaderboard GetLeaderboard(int neighbors)
         {
             var get = new HttpGet();
-            var endPoint = "https://api.foursquare.com/v2/users/leaderboard?neighbors=" +
+            string endPoint = "https://api.foursquare.com/v2/users/leaderboard?neighbors=" +
                               neighbors.ToString(CultureInfo.InvariantCulture) + "&callback=XXX&v=" + Version +
                               "&oauth_token=" + _accessToken;
             get.Request(endPoint);
-            var jsonDictionary = Helpers.JsonDeserializer(get.ResponseBody);
+            Dictionary<string, object> jsonDictionary = Helpers.JsonDeserializer(get.ResponseBody);
             return new Leaderboard(jsonDictionary);
         }
 
@@ -145,10 +145,10 @@ namespace Brahmastra.FoursquareAPI
         public Users GetUserRequests()
         {
             var get = new HttpGet();
-            var endPoint = "https://api.foursquare.com/v2/users/requests" + "?callback=XXX&v=" + Version +
+            string endPoint = "https://api.foursquare.com/v2/users/requests" + "?callback=XXX&v=" + Version +
                               "&oauth_token=" + _accessToken;
             get.Request(endPoint);
-            var jsonDictionary = Helpers.JsonDeserializer(get.ResponseBody);
+            Dictionary<string, object> jsonDictionary = Helpers.JsonDeserializer(get.ResponseBody);
             return new Users(jsonDictionary);
         }
 
@@ -594,10 +594,10 @@ namespace Brahmastra.FoursquareAPI
         public Venue GetVenue(string venueID)
         {
             var get = new HttpGet();
-            var endPoint = "https://api.foursquare.com/v2/venues/" + venueID + "?callback=XXX&v=" + Version +
+            string endPoint = "https://api.foursquare.com/v2/venues/" + venueID + "?callback=XXX&v=" + Version +
                               "&oauth_token=" + _accessToken;
             get.Request(endPoint);
-            var jsonDictionary = Helpers.JsonDeserializer(get.ResponseBody);
+            Dictionary<string, object> jsonDictionary = Helpers.JsonDeserializer(get.ResponseBody);
             return new Venue(jsonDictionary);
         }
 
@@ -660,7 +660,7 @@ namespace Brahmastra.FoursquareAPI
             #endregion Parameter Conditioning
 
             var post = new HttpPost(new Uri("https://api.foursquare.com/v2/venues/add"), parameters);
-            var jsonDictionary = Helpers.JsonDeserializer(post.ResponseBody);
+            Dictionary<string, object> jsonDictionary = Helpers.JsonDeserializer(post.ResponseBody);
             return new Venue(jsonDictionary);
         }
 
@@ -670,10 +670,10 @@ namespace Brahmastra.FoursquareAPI
         public VenueCategories GetVenueCategories()
         {
             var get = new HttpGet();
-            var endPoint = "https://api.foursquare.com/v2/venues/categories" + "?callback=XXX&v=" + Version +
+            string endPoint = "https://api.foursquare.com/v2/venues/categories" + "?callback=XXX&v=" + Version +
                               "&oauth_token=" + _accessToken;
             get.Request(endPoint);
-            var jsonDictionary = Helpers.JsonDeserializer(get.ResponseBody);
+            Dictionary<string, object> jsonDictionary = Helpers.JsonDeserializer(get.ResponseBody);
             return new VenueCategories(jsonDictionary);
         }
 
@@ -693,107 +693,107 @@ namespace Brahmastra.FoursquareAPI
                                               string section, string query, string limit, string basis)
         {
             var get = new HttpGet();
-            string Query = "";
+            string localQuery = "";
 
             #region Parameters
 
             //ll
             if (!ll.Equals(""))
             {
-                if (Query.Equals(""))
-                    Query = "?";
+                if (localQuery.Equals(""))
+                    localQuery = "?";
                 else
-                    Query += "&";
-                Query += "ll=" + ll;
+                    localQuery += "&";
+                localQuery += "ll=" + ll;
             }
 
             //llAcc
             if (!llAcc.Equals(""))
             {
-                if (Query.Equals(""))
-                    Query = "?";
+                if (localQuery.Equals(""))
+                    localQuery = "?";
                 else
-                    Query += "&";
-                Query += "llAcc=" + llAcc;
+                    localQuery += "&";
+                localQuery += "llAcc=" + llAcc;
             }
 
             //alt
             if (!alt.Equals(""))
             {
-                if (Query.Equals(""))
-                    Query = "?";
+                if (localQuery.Equals(""))
+                    localQuery = "?";
                 else
-                    Query += "&";
-                Query += "alt=" + alt;
+                    localQuery += "&";
+                localQuery += "alt=" + alt;
             }
 
             //altAcc
             if (!altAcc.Equals(""))
             {
-                if (Query.Equals(""))
-                    Query = "?";
+                if (localQuery.Equals(""))
+                    localQuery = "?";
                 else
-                    Query += "&";
-                Query += "altAcc=" + altAcc;
+                    localQuery += "&";
+                localQuery += "altAcc=" + altAcc;
             }
 
             //radius
             if (!radius.Equals(""))
             {
-                if (Query.Equals(""))
-                    Query = "?";
+                if (localQuery.Equals(""))
+                    localQuery = "?";
                 else
-                    Query += "&";
-                Query += "radius=" + radius;
+                    localQuery += "&";
+                localQuery += "radius=" + radius;
             }
 
             //section
             if (!section.Equals(""))
             {
-                if (Query.Equals(""))
-                    Query = "?";
+                if (localQuery.Equals(""))
+                    localQuery = "?";
                 else
-                    Query += "&";
-                Query += "section=" + section;
+                    localQuery += "&";
+                localQuery += "section=" + section;
             }
 
             //query
-            if (!query.Equals(""))
+            if (!localQuery.Equals(""))
             {
-                if (Query.Equals(""))
-                    Query = "?";
+                if (localQuery.Equals(""))
+                    localQuery = "?";
                 else
-                    Query += "&";
-                Query += "query=" + query;
+                    localQuery += "&";
+                localQuery += "query=" + localQuery;
             }
 
             //limit
             if (!limit.Equals(""))
             {
-                if (Query.Equals(""))
-                    Query = "?";
+                if (localQuery.Equals(""))
+                    localQuery = "?";
                 else
-                    Query += "&";
-                Query += "limit=" + limit;
+                    localQuery += "&";
+                localQuery += "limit=" + limit;
             }
 
             //basis
             if (!basis.Equals(""))
             {
-                if (Query.Equals(""))
-                    Query = "?";
+                if (localQuery.Equals(""))
+                    localQuery = "?";
                 else
-                    Query += "&";
-                Query += "basis=" + basis;
+                    localQuery += "&";
+                localQuery += "basis=" + basis;
             }
 
             #endregion Parameters
 
-            var endPoint = "https://api.foursquare.com/v2/venues/explore" + Query + "&callback=XXX&v=" + Version +
+            string endPoint = "https://api.foursquare.com/v2/venues/explore" + localQuery + "&callback=XXX&v=" + Version +
                               "&oauth_token=" + _accessToken;
             get.Request(endPoint);
-            Dictionary<string, object> JSONDictionary = Helpers.JsonDeserializer(get.ResponseBody);
-            return new RecommendedVenues(JSONDictionary);
+            Dictionary<string, object> jsonDictionary = Helpers.JsonDeserializer(get.ResponseBody);
+            return new RecommendedVenues(jsonDictionary);
         }
 
         /// <summary>
@@ -814,128 +814,127 @@ namespace Brahmastra.FoursquareAPI
                                  string intent, string categoryId, string url, string providerId, string linkedId)
         {
             var get = new HttpGet();
-            var Query = "";
+            string localQuery = "";
 
             #region Query Conditioning
 
             //ll
             if (!ll.Equals(""))
             {
-                if (Query.Equals(""))
-                    Query = "?";
+                if (localQuery.Equals(""))
+                    localQuery = "?";
                 else
-                    Query += "&";
-                Query += "ll=" + ll;
+                    localQuery += "&";
+                localQuery += "ll=" + ll;
             }
 
             //llAcc
             if (!llAcc.Equals(""))
             {
-                if (Query.Equals(""))
-                    Query = "?";
+                if (localQuery.Equals(""))
+                    localQuery = "?";
                 else
-                    Query += "&";
-                Query += "llAcc=" + llAcc;
+                    localQuery += "&";
+                localQuery += "llAcc=" + llAcc;
             }
 
             //alt
             if (!alt.Equals(""))
             {
-                if (Query.Equals(""))
-                    Query = "?";
+                if (localQuery.Equals(""))
+                    localQuery = "?";
                 else
-                    Query += "&";
-                Query += "alt=" + alt;
+                    localQuery += "&";
+                localQuery += "alt=" + alt;
             }
 
             //altAcc
             if (!altAcc.Equals(""))
             {
-                if (Query.Equals(""))
-                    Query = "?";
+                if (localQuery.Equals(""))
+                    localQuery = "?";
                 else
-                    Query += "&";
-                Query += "altAcc=" + altAcc;
+                    localQuery += "&";
+                localQuery += "altAcc=" + altAcc;
             }
 
             //query
             if (!query.Equals(""))
             {
-                if (Query.Equals(""))
-                    Query = "?";
+                if (localQuery.Equals(""))
+                    localQuery = "?";
                 else
-                    Query += "&";
-                Query += "query=" + query;
+                    localQuery += "&";
+                localQuery += "query=" + query;
             }
 
             //limit
             if (!limit.Equals(""))
             {
-                if (Query.Equals(""))
-                    Query = "?";
+                if (localQuery.Equals(""))
+                    localQuery = "?";
                 else
-                    Query += "&";
-                Query += "limit=" + limit;
+                    localQuery += "&";
+                localQuery += "limit=" + limit;
             }
 
             //intent
             if (!intent.Equals(""))
             {
-                if (Query.Equals(""))
-                    Query = "?";
+                if (localQuery.Equals(""))
+                    localQuery = "?";
                 else
-                    Query += "&";
-                Query += "intent=" + intent;
+                    localQuery += "&";
+                localQuery += "intent=" + intent;
             }
 
             //categoryId
             if (!categoryId.Equals(""))
             {
-                if (Query.Equals(""))
-                    Query = "?";
+                if (localQuery.Equals(""))
+                    localQuery = "?";
                 else
-                    Query += "&";
-                Query += "categoryId=" + categoryId;
+                    localQuery += "&";
+                localQuery += "categoryId=" + categoryId;
             }
 
             //url
             if (!url.Equals(""))
             {
-                if (Query.Equals(""))
-                    Query = "?";
+                if (localQuery.Equals(""))
+                    localQuery = "?";
                 else
-                    Query += "&";
-                Query += "url=" + url;
+                    localQuery += "&";
+                localQuery += "url=" + url;
             }
 
             //providerId
             if (!providerId.Equals(""))
             {
-                if (Query.Equals(""))
-                    Query = "?";
+                if (localQuery.Equals(""))
+                    localQuery = "?";
                 else
-                    Query += "&";
-                Query += "providerId=" + providerId;
+                    localQuery += "&";
+                localQuery += "providerId=" + providerId;
             }
 
             //linkedId
             if (!linkedId.Equals(""))
             {
-                if (Query.Equals(""))
-                    Query = "?";
+                if (localQuery.Equals(""))
+                    localQuery = "?";
                 else
-                    Query += "&";
-                Query += "linkedId=" + linkedId;
+                    localQuery += "&";
+                localQuery += "linkedId=" + linkedId;
             }
 
             #endregion Query Conditioning
 
-            string EndPoint = "https://api.foursquare.com/v2/venues/search" + Query + "&callback=XXX&v=" + Version +
+            string endPoint = "https://api.foursquare.com/v2/venues/search" + localQuery + "&callback=XXX&v=" + Version +
                               "&oauth_token=" + _accessToken;
-            get.Request(EndPoint);
-            Dictionary<string, object> JSONDictionary = Helpers.JsonDeserializer(get.ResponseBody);
-            var FoundVenues = new Venues(JSONDictionary);
-            return FoundVenues;
+            get.Request(endPoint);
+            Dictionary<string, object> jsonDictionary = Helpers.JsonDeserializer(get.ResponseBody);
+            return new Venues(jsonDictionary);
         }
 
         /// <summary>
@@ -947,47 +946,47 @@ namespace Brahmastra.FoursquareAPI
         public Venues GetTrendingVenues(string ll, string limit, string radius)
         {
             var get = new HttpGet();
-            string Query = "";
+            string query = "";
 
             #region Query Conditioning
 
             //ll
             if (!ll.Equals(""))
             {
-                if (Query.Equals(""))
-                    Query = "?";
+                if (query.Equals(""))
+                    query = "?";
                 else
-                    Query += "&";
-                Query += "ll=" + ll;
+                    query += "&";
+                query += "ll=" + ll;
             }
 
             //limit
             if (!limit.Equals(""))
             {
-                if (Query.Equals(""))
-                    Query = "?";
+                if (query.Equals(""))
+                    query = "?";
                 else
-                    Query += "&";
-                Query += "limit=" + limit;
+                    query += "&";
+                query += "limit=" + limit;
             }
 
             //radius
             if (!radius.Equals(""))
             {
-                if (Query.Equals(""))
-                    Query = "?";
+                if (query.Equals(""))
+                    query = "?";
                 else
-                    Query += "&";
-                Query += "radius=" + radius;
+                    query += "&";
+                query += "radius=" + radius;
             }
 
             #endregion Query Conditioning
 
-            string EndPoint = "https://api.foursquare.com/v2/venues/trending" + Query + "&callback=XXX&v=" + Version +
+            string endPoint = "https://api.foursquare.com/v2/venues/trending" + query + "&callback=XXX&v=" + Version +
                               "&oauth_token=" + _accessToken;
-            get.Request(EndPoint);
-            Dictionary<string, object> JSONDictionary = Helpers.JsonDeserializer(get.ResponseBody);
-            return new Venues(JSONDictionary);
+            get.Request(endPoint);
+            Dictionary<string, object> jsonDictionary = Helpers.JsonDeserializer(get.ResponseBody);
+            return new Venues(jsonDictionary);
         }
 
         /// <summary>
@@ -1000,7 +999,7 @@ namespace Brahmastra.FoursquareAPI
         public Checkins GetCurrentCheckinsAtVenue(string venueID, string limit, string offset, string afterTimestamp)
         {
             var get = new HttpGet();
-            var query = "";
+            string query = "";
 
             #region Query Conditioning
 
@@ -1036,11 +1035,11 @@ namespace Brahmastra.FoursquareAPI
 
             #endregion Query Conditioning
 
-            string EndPoint = "https://api.foursquare.com/v2/venues/" + venueID + "/herenow" + query +
+            string endPoint = "https://api.foursquare.com/v2/venues/" + venueID + "/herenow" + query +
                               "&callback=XXX&v=" + Version + "&oauth_token=" + _accessToken;
-            get.Request(EndPoint);
-            Dictionary<string, object> JSONDictionary = Helpers.JsonDeserializer(get.ResponseBody);
-            return new Checkins(JSONDictionary);
+            get.Request(endPoint);
+            Dictionary<string, object> jsonDictionary = Helpers.JsonDeserializer(get.ResponseBody);
+            return new Checkins(jsonDictionary);
         }
 
         /// <summary>
@@ -1053,7 +1052,7 @@ namespace Brahmastra.FoursquareAPI
         public Tips GetVenueTips(string venueID, string sort, string limit, string offset)
         {
             var get = new HttpGet();
-            var query = "";
+            string query = "";
 
             #region Query Conditioning
 
@@ -1094,11 +1093,11 @@ namespace Brahmastra.FoursquareAPI
 
             #endregion Query Conditioning
 
-            string EndPoint = "https://api.foursquare.com/v2/venues/" + venueID + "/tips" + query + "callback=XXX&v=" +
+            string endPoint = "https://api.foursquare.com/v2/venues/" + venueID + "/tips" + query + "callback=XXX&v=" +
                               Version + "&oauth_token=" + _accessToken;
-            get.Request(EndPoint);
-            Dictionary<string, object> JSONDictionary = Helpers.JsonDeserializer(get.ResponseBody);
-            return new Tips(JSONDictionary);
+            get.Request(endPoint);
+            Dictionary<string, object> jsonDictionary = Helpers.JsonDeserializer(get.ResponseBody);
+            return new Tips(jsonDictionary);
         }
 
         /// <summary>
@@ -1110,8 +1109,8 @@ namespace Brahmastra.FoursquareAPI
         /// <param name="offset">Used to page through results.</param>
         public Photos GetVenuePhotos(string venueID, string group, string limit, string offset)
         {
-            var GET = new HttpGet();
-            var query = "";
+            var get = new HttpGet();
+            string query = "";
 
             #region Query Conditioning
 
@@ -1152,10 +1151,10 @@ namespace Brahmastra.FoursquareAPI
 
             #endregion Query Conditioning
 
-            var endPoint = "https://api.foursquare.com/v2/venues/" + venueID + "/photos" + query + "callback=XXX&v=" +
+            string endPoint = "https://api.foursquare.com/v2/venues/" + venueID + "/photos" + query + "callback=XXX&v=" +
                               Version + "&oauth_token=" + _accessToken;
-            GET.Request(endPoint);
-            var jsonDictionary = Helpers.JsonDeserializer(GET.ResponseBody);
+            get.Request(endPoint);
+            Dictionary<string, object> jsonDictionary = Helpers.JsonDeserializer(get.ResponseBody);
             return new Photos(jsonDictionary);
         }
 
@@ -1167,10 +1166,10 @@ namespace Brahmastra.FoursquareAPI
         {
             var get = new HttpGet();
 
-            var endPoint = "https://api.foursquare.com/v2/venues/" + venueID + "/links?callback=XXX&v=" + Version +
+            string endPoint = "https://api.foursquare.com/v2/venues/" + venueID + "/links?callback=XXX&v=" + Version +
                               "&oauth_token=" + _accessToken;
             get.Request(endPoint);
-            var jsonDictionary = Helpers.JsonDeserializer(get.ResponseBody);
+            Dictionary<string, object> jsonDictionary = Helpers.JsonDeserializer(get.ResponseBody);
             return new Links(jsonDictionary);
         }
 
@@ -1194,7 +1193,7 @@ namespace Brahmastra.FoursquareAPI
 
             var post = new HttpPost(new Uri("https://api.foursquare.com/v2/venues/" + venueID + "/marktodo"),
                                     parameters);
-            var jsonDictionary = Helpers.JsonDeserializer(post.ResponseBody);
+            Dictionary<string, object> jsonDictionary = Helpers.JsonDeserializer(post.ResponseBody);
             return new ToDo(jsonDictionary);
         }
 
@@ -1217,8 +1216,8 @@ namespace Brahmastra.FoursquareAPI
             #endregion Parameter Conditioning
 
             var post = new HttpPost(new Uri("https://api.foursquare.com/v2/venues/" + venueID + "/flag"), parameters);
-            var jsonDictionary = Helpers.JsonDeserializer(post.ResponseBody);
-            return ((Dictionary<string, object>)jsonDictionary["meta"])["code"].ToString().Equals("200");
+            Dictionary<string, object> jsonDictionary = Helpers.JsonDeserializer(post.ResponseBody);
+            return ((Dictionary<string, object>) jsonDictionary["meta"])["code"].ToString().Equals("200");
         }
 
         /// <summary>
@@ -1328,7 +1327,7 @@ namespace Brahmastra.FoursquareAPI
 
             var post = new HttpPost(new Uri("https://api.foursquare.com/v2/venues/" + venueID + "/" + editType),
                                     parameters);
-            var jsonDictionary = Helpers.JsonDeserializer(post.ResponseBody);
+            Dictionary<string, object> jsonDictionary = Helpers.JsonDeserializer(post.ResponseBody);
             return ((Dictionary<string, object>) jsonDictionary["meta"])["code"].ToString().Equals("200");
         }
 
@@ -1352,37 +1351,37 @@ namespace Brahmastra.FoursquareAPI
         /// <param name="signature">When checkins are sent to public feeds such as Twitter, foursquare appends a signature (s=XXXXXX) allowing users to bypass the friends-only access check on checkins. The same value can be used here for programmatic access to otherwise inaccessible checkins. Callers should use the bit.ly API to first expand 4sq.com links.</param>
         public Checkin GetCheckinDetails(string checkinID, string signature)
         {
-            string Query = "";
+            string query = "";
 
             if (!signature.Equals(""))
             {
-                if (Query.Equals(""))
-                    Query = "?";
+                if (query.Equals(""))
+                    query = "?";
                 else
-                    Query += "&";
-                Query += "signature=" + signature;
+                    query += "&";
+                query += "signature=" + signature;
             }
-            if (Query.Equals(""))
-                Query = "?";
+            if (query.Equals(""))
+                query = "?";
             else
-                Query += "&";
-            var GET = new HttpGet();
-            string EndPoint = "https://api.foursquare.com/v2/checkins/" + checkinID + Query + "callback=XXX&v=" +
+                query += "&";
+            var get = new HttpGet();
+            string endPoint = "https://api.foursquare.com/v2/checkins/" + checkinID + query + "callback=XXX&v=" +
                               Version + "&oauth_token=" + _accessToken;
-            GET.Request(EndPoint);
-            Dictionary<string, object> JSONDictionary = Helpers.JsonDeserializer(GET.ResponseBody);
-            return new Checkin(JSONDictionary);
+            get.Request(endPoint);
+            Dictionary<string, object> jsonDictionary = Helpers.JsonDeserializer(get.ResponseBody);
+            return new Checkin(jsonDictionary);
         }
 
         /// <summary>
         /// Allows you to check in to a place.
         /// </summary>
         /// <param name="venueId">The venue where the user is checking in. No venueid is needed if shouting or just providing a venue name.</param>
-        /// <param name="Broadcast">Required. How much to broadcast this check-in, ranging from private (off-the-grid) to public,facebook,twitter. Can also be just public or public,facebook, for example. If no valid value is found, the default is public. Shouts cannot be private.</param>
-        /// <param name="LL">Latitude and longitude of the user's location. Only specify this field if you have a GPS or other device reported location for the user at the time of check-in.</param>
-        public Checkin addCheckin(string venueId, string broadcast, string ll)
+        /// <param name="broadcast">Required. How much to broadcast this check-in, ranging from private (off-the-grid) to public,facebook,twitter. Can also be just public or public,facebook, for example. If no valid value is found, the default is public. Shouts cannot be private.</param>
+        /// <param name="ll">Latitude and longitude of the user's location. Only specify this field if you have a GPS or other device reported location for the user at the time of check-in.</param>
+        public Checkin AddCheckin(string venueId, string broadcast, string ll)
         {
-            return addCheckin(venueId, "", "", broadcast, ll, "1", "0", "1");
+            return AddCheckin(venueId, "", "", broadcast, ll, "1", "0", "1");
         }
 
         /// <summary>
@@ -1396,7 +1395,7 @@ namespace Brahmastra.FoursquareAPI
         /// <param name="llAcc">Accuracy of the user's latitude and longitude, in meters.</param>
         /// <param name="alt">Altitude of the user's location, in meters.</param>
         /// <param name="altAcc">Vertical accuracy of the user's location, in meters.</param>
-        public Checkin addCheckin(string venueId, string venue, string shout, string broadcast, string ll, string llAcc,
+        public Checkin AddCheckin(string venueId, string venue, string shout, string broadcast, string ll, string llAcc,
                                   string alt, string altAcc)
         {
             var parameters = new Dictionary<string, string>();
@@ -1422,9 +1421,9 @@ namespace Brahmastra.FoursquareAPI
             parameters.Add("oauth_token", _accessToken);
 
 
-            var POST = new HttpPost(new Uri("https://api.foursquare.com/v2/checkins/add"), parameters);
-            Dictionary<string, object> JSONDictionary = Helpers.JsonDeserializer(POST.ResponseBody);
-            return new Checkin(JSONDictionary);
+            var post = new HttpPost(new Uri("https://api.foursquare.com/v2/checkins/add"), parameters);
+            Dictionary<string, object> jsonDictionary = Helpers.JsonDeserializer(post.ResponseBody);
+            return new Checkin(jsonDictionary);
         }
 
         /// <summary>
@@ -1433,89 +1432,86 @@ namespace Brahmastra.FoursquareAPI
         /// <param name="ll">Latitude and longitude of the user's location, so response can include distance. "44.3,37.2"</param>
         /// <param name="limit">Number of results to return, up to 100.</param>
         /// <param name="afterTimestamp">Seconds after which to look for checkins</param>
-        public Checkins getRecentCheckin(string LL, string Limit, string AfterTimestamp)
+        public Checkins GetRecentCheckin(string ll, string limit, string afterTimestamp)
         {
-            string Query = "";
+            string query = "";
 
-            if (!LL.Equals(""))
+            if (!ll.Equals(""))
             {
-                if (Query.Equals(""))
-                    Query = "?";
+                if (query.Equals(""))
+                    query = "?";
                 else
-                    Query += "&";
-                Query += "ll=" + LL;
+                    query += "&";
+                query += "ll=" + ll;
             }
 
-            if (!Limit.Equals(""))
+            if (!limit.Equals(""))
             {
-                if (Query.Equals(""))
-                    Query = "?";
+                if (query.Equals(""))
+                    query = "?";
                 else
-                    Query += "&";
-                Query += "limit=" + Limit;
+                    query += "&";
+                query += "limit=" + limit;
             }
 
-            if (!AfterTimestamp.Equals(""))
+            if (!afterTimestamp.Equals(""))
             {
-                if (Query.Equals(""))
-                    Query = "?";
+                if (query.Equals(""))
+                    query = "?";
                 else
-                    Query += "&";
-                Query += "afterTimestamp=" + AfterTimestamp;
+                    query += "&";
+                query += "afterTimestamp=" + afterTimestamp;
             }
 
-            if (Query.Equals(""))
-                Query = "?";
+            if (query.Equals(""))
+                query = "?";
             else
-                Query += "&";
+                query += "&";
 
-            var GET = new HttpGet();
-            string EndPoint = "https://api.foursquare.com/v2/checkins/recent" + Query + "callback=XXX&v=" + Version +
+            var get = new HttpGet();
+            string endPoint = "https://api.foursquare.com/v2/checkins/recent" + query + "callback=XXX&v=" + Version +
                               "&oauth_token=" + _accessToken;
-            GET.Request(EndPoint);
-            Dictionary<string, object> JSONDictionary = Helpers.JsonDeserializer(GET.ResponseBody);
-            return new Checkins(JSONDictionary);
+            get.Request(endPoint);
+            Dictionary<string, object> jsonDictionary = Helpers.JsonDeserializer(get.ResponseBody);
+            return new Checkins(jsonDictionary);
         }
 
         /// <summary>
         /// Add a comment to a check-in  
         /// </summary>
-        /// <param name="CHECKIN_ID">The ID of the checkin to add a comment to.</param>
+        /// <param name="checkinID">The ID of the checkin to add a comment to.</param>
         /// <param name="text">The text of the comment, up to 200 characters.</param>
-        public Comment addComment(string CHECKIN_ID, string Text)
+        public Comment AddComment(string checkinID, string text)
         {
-            var parameters = new Dictionary<string, string>();
+            var parameters = new Dictionary<string, string>
+                                 {{"callback", "XXX"}, {"v", Version}, {"text", text}, {"oauth_token", _accessToken}};
 
-            parameters.Add("callback", "XXX");
-            parameters.Add("v", Version);
-            parameters.Add("text", Text);
-            parameters.Add("oauth_token", _accessToken);
-
-            var POST = new HttpPost(new Uri("https://api.foursquare.com/v2/checkins/" + CHECKIN_ID + "/addcomment"),
+            var post = new HttpPost(new Uri("https://api.foursquare.com/v2/checkins/" + checkinID + "/addcomment"),
                                     parameters);
-            Dictionary<string, object> JSONDictionary = Helpers.JsonDeserializer(POST.ResponseBody);
-            return new Comment(JSONDictionary);
+            Dictionary<string, object> jsonDictionary = Helpers.JsonDeserializer(post.ResponseBody);
+            return new Comment(jsonDictionary);
         }
 
         /// <summary>
         /// Remove commment from check-in   
         /// </summary>
-        /// <param name="CHECKIN_ID">The ID of the checkin to remove a comment from.</param>
+        /// <param name="checkinID">The ID of the checkin to remove a comment from.</param>
         /// <param name="commentId">The id of the comment to remove.</param>
-        public Checkin deleteComment(string CHECKIN_ID, string commentId)
+        public Checkin DeleteComment(string checkinID, string commentId)
         {
-            var parameters = new Dictionary<string, string>();
+            var parameters = new Dictionary<string, string>
+                                 {
+                                     {"callback", "XXX"},
+                                     {"commentId", commentId},
+                                     {"v", Version},
+                                     {"oauth_token", _accessToken}
+                                 };
 
-            parameters.Add("callback", "XXX");
-            parameters.Add("commentId", commentId);
-            parameters.Add("v", Version);
-            parameters.Add("oauth_token", _accessToken);
 
-
-            var POST = new HttpPost(new Uri("https://api.foursquare.com/v2/checkins/" + CHECKIN_ID + "/deletecomment"),
+            var post = new HttpPost(new Uri("https://api.foursquare.com/v2/checkins/" + checkinID + "/deletecomment"),
                                     parameters);
-            Dictionary<string, object> JSONDictionary = Helpers.JsonDeserializer(POST.ResponseBody);
-            return new Checkin(JSONDictionary);
+            Dictionary<string, object> jsonDictionary = Helpers.JsonDeserializer(post.ResponseBody);
+            return new Checkin(jsonDictionary);
         }
 
         #endregion Checkins
@@ -1525,15 +1521,15 @@ namespace Brahmastra.FoursquareAPI
         /// <summary>
         /// Gives details about a tip, including which users (especially friends) have marked the tip to-do or done.    
         /// </summary>
-        /// <param name="TIP_ID">required ID of tip to retrieve</param>
-        public Tip getTip(string TIP_ID, string accessToken)
+        /// <param name="tipID">required ID of tip to retrieve</param>
+        public Tip GetTip(string tipID)
         {
-            var GET = new HttpGet();
-            string EndPoint = "https://api.foursquare.com/v2/tips/" + TIP_ID + "?callback=XXX&v=" + Version +
-                              "&oauth_token=" + accessToken;
-            GET.Request(EndPoint);
-            Dictionary<string, object> JSONDictionary = Helpers.JsonDeserializer(GET.ResponseBody);
-            return new Tip(JSONDictionary);
+            var get = new HttpGet();
+            string endPoint = "https://api.foursquare.com/v2/tips/" + tipID + "?callback=XXX&v=" + Version +
+                              "&oauth_token=" + _accessToken;
+            get.Request(endPoint);
+            Dictionary<string, object> jsonDictionary = Helpers.JsonDeserializer(get.ResponseBody);
+            return new Tip(jsonDictionary);
         }
 
         /// <summary>
@@ -1542,21 +1538,22 @@ namespace Brahmastra.FoursquareAPI
         /// <param name="venueId">required The venue where you want to add this tip.</param>
         /// <param name="text">required The text of the tip.</param>
         /// <param name="url">A URL related to this tip.</param>
-        public Tip addTip(string venueId, string text, string url)
+        public Tip AddTip(string venueId, string text, string url)
         {
-            var parameters = new Dictionary<string, string>();
+            var parameters = new Dictionary<string, string>
+                                 {
+                                     {"callback", "XXX"},
+                                     {"text", text},
+                                     {"url", url},
+                                     {"v", Version},
+                                     {"venueId", venueId},
+                                     {"oauth_token", _accessToken}
+                                 };
 
-            parameters.Add("callback", "XXX");
-            parameters.Add("text", text);
-            parameters.Add("url", url);
-            parameters.Add("v", Version);
-            parameters.Add("venueId", venueId);
-            parameters.Add("oauth_token", _accessToken);
 
-
-            var POST = new HttpPost(new Uri("https://api.foursquare.com/v2/tips/add"), parameters);
-            Dictionary<string, object> JSONDictionary = Helpers.JsonDeserializer(POST.ResponseBody);
-            return new Tip(JSONDictionary);
+            var post = new HttpPost(new Uri("https://api.foursquare.com/v2/tips/add"), parameters);
+            Dictionary<string, object> jsonDictionary = Helpers.JsonDeserializer(post.ResponseBody);
+            return new Tip(jsonDictionary);
         }
 
         /// <summary>
@@ -1567,122 +1564,113 @@ namespace Brahmastra.FoursquareAPI
         /// <param name="offset">optional Used to page through results.</param>
         /// <param name="filter">If set to friends, only show nearby tips from friends.</param>
         /// <param name="query">Only find tips matching the given term, cannot be used in conjunction with friends filter.</param>
-        public Tips findTip(string ll, string limit, string offset, string filter, string query)
+        public Tips FindTip(string ll, string limit, string offset, string filter, string query)
         {
             #region QueryConditioning
 
-            string Query = "";
+            string localQuery = "";
 
 
             if (!ll.Equals(""))
             {
-                if (Query.Equals(""))
-                    Query = "?";
+                if (localQuery.Equals(""))
+                    localQuery = "?";
                 else
-                    Query += "&";
-                Query += "ll=" + ll;
+                    localQuery += "&";
+                localQuery += "ll=" + ll;
             }
 
             if (!limit.Equals(""))
             {
-                if (Query.Equals(""))
-                    Query = "?";
+                if (localQuery.Equals(""))
+                    localQuery = "?";
                 else
-                    Query += "&";
-                Query += "limit=" + limit;
+                    localQuery += "&";
+                localQuery += "limit=" + limit;
             }
 
             if (!offset.Equals(""))
             {
-                if (Query.Equals(""))
-                    Query = "?";
+                if (localQuery.Equals(""))
+                    localQuery = "?";
                 else
-                    Query += "&";
-                Query += "offset=" + offset;
+                    localQuery += "&";
+                localQuery += "offset=" + offset;
             }
 
             if (!filter.Equals(""))
             {
-                if (Query.Equals(""))
-                    Query = "?";
+                if (localQuery.Equals(""))
+                    localQuery = "?";
                 else
-                    Query += "&";
-                Query += "filter=" + filter;
+                    localQuery += "&";
+                localQuery += "filter=" + filter;
             }
 
             if (!query.Equals(""))
             {
-                if (Query.Equals(""))
-                    Query = "?";
+                if (localQuery.Equals(""))
+                    localQuery = "?";
                 else
-                    Query += "&";
-                Query += "query=" + query;
+                    localQuery += "&";
+                localQuery += "query=" + query;
             }
 
-            if (Query.Equals(""))
-                Query = "?";
+            if (localQuery.Equals(""))
+                localQuery = "?";
             else
-                Query += "&";
+                localQuery += "&";
 
             #endregion QueryConditioning
 
-            var GET = new HttpGet();
-            string EndPoint = "https://api.foursquare.com/v2/tips/search" + Query + "callback=XXX&v=" + Version +
+            var get = new HttpGet();
+            string endPoint = "https://api.foursquare.com/v2/tips/search" + localQuery + "callback=XXX&v=" + Version +
                               "&oauth_token=" + _accessToken;
-            GET.Request(EndPoint);
-            Dictionary<string, object> JSONDictionary = Helpers.JsonDeserializer(GET.ResponseBody);
-            return new Tips(JSONDictionary);
+            get.Request(endPoint);
+            Dictionary<string, object> jsonDictionary = Helpers.JsonDeserializer(get.ResponseBody);
+            return new Tips(jsonDictionary);
         }
 
         /// <summary>
         /// Allows you to mark a tip to-do.   
         /// </summary>
-        /// <param name="TIP_ID">required The tip you want to mark to-do.</param>
-        public ToDo markTipAsToDo(string TIP_ID)
+        /// <param name="tipID">required The tip you want to mark to-do.</param>
+        public ToDo MarkTipAsToDo(string tipID)
         {
-            var parameters = new Dictionary<string, string>();
+            var parameters = new Dictionary<string, string>
+                                 {{"callback", "XXX"}, {"v", Version}, {"oauth_token", _accessToken}};
 
-            parameters.Add("callback", "XXX");
-            parameters.Add("v", Version);
-            parameters.Add("oauth_token", _accessToken);
-
-            var POST = new HttpPost(new Uri("https://api.foursquare.com/v2/tips/" + TIP_ID + "/marktodo"), parameters);
-            Dictionary<string, object> JSONDictionary = Helpers.JsonDeserializer(POST.ResponseBody);
-            return new ToDo(JSONDictionary);
+            var post = new HttpPost(new Uri("https://api.foursquare.com/v2/tips/" + tipID + "/marktodo"), parameters);
+            Dictionary<string, object> jsonDictionary = Helpers.JsonDeserializer(post.ResponseBody);
+            return new ToDo(jsonDictionary);
         }
 
         /// <summary>
         /// Allows the acting user to mark a tip done.   
         /// </summary>
-        /// <param name="TIP_ID">required The tip you want to mark done.</param>
-        public Tip markTipAsDone(string TIP_ID)
+        /// <param name="tipID">required The tip you want to mark done.</param>
+        public Tip MarkTipAsDone(string tipID)
         {
-            var parameters = new Dictionary<string, string>();
+            var parameters = new Dictionary<string, string>
+                                 {{"callback", "XXX"}, {"v", Version}, {"oauth_token", _accessToken}};
 
-            parameters.Add("callback", "XXX");
-            parameters.Add("v", Version);
-            parameters.Add("oauth_token", _accessToken);
-
-            var POST = new HttpPost(new Uri("https://api.foursquare.com/v2/tips/" + TIP_ID + "/markdone"), parameters);
-            Dictionary<string, object> JSONDictionary = Helpers.JsonDeserializer(POST.ResponseBody);
-            return new Tip(JSONDictionary);
+            var post = new HttpPost(new Uri("https://api.foursquare.com/v2/tips/" + tipID + "/markdone"), parameters);
+            Dictionary<string, object> jsonDictionary = Helpers.JsonDeserializer(post.ResponseBody);
+            return new Tip(jsonDictionary);
         }
 
         /// <summary>
         /// Allows you to remove a tip from your to-do list or done list.    
         /// </summary>
-        /// <param name="TIP_ID">required The tip you want to unmark.</param>
-        public Tip unmarkTip(string TIP_ID)
+        /// <param name="tipID">required The tip you want to unmark.</param>
+        public Tip UnmarkTip(string tipID)
         {
-            var parameters = new Dictionary<string, string>();
+            var parameters = new Dictionary<string, string>
+                                 {{"callback", "XXX"}, {"v", Version}, {"oauth_token", _accessToken}};
 
-            parameters.Add("callback", "XXX");
-            parameters.Add("v", Version);
-            parameters.Add("oauth_token", _accessToken);
-
-            var POST = new HttpPost(new Uri("https://api.foursquare.com/v2/tips/" + TIP_ID + "/unmark"), parameters);
-            Dictionary<string, object> JSONDictionary = Helpers.JsonDeserializer(POST.ResponseBody);
-            return new Tip(JSONDictionary);
+            var post = new HttpPost(new Uri("https://api.foursquare.com/v2/tips/" + tipID + "/unmark"), parameters);
+            Dictionary<string, object> jsonDictionary = Helpers.JsonDeserializer(post.ResponseBody);
+            return new Tip(jsonDictionary);
         }
 
         #endregion Tips
@@ -1692,15 +1680,15 @@ namespace Brahmastra.FoursquareAPI
         /// <summary>
         /// Get details of a photo. 
         /// </summary>
-        /// <param name="PHOTO_ID">The ID of the photo to retrieve additional information for.</param>
-        public Photo getPhoto(string PHOTO_ID)
+        /// <param name="photoID">The ID of the photo to retrieve additional information for.</param>
+        public Photo GetPhoto(string photoID)
         {
-            var GET = new HttpGet();
-            string EndPoint = "https://api.foursquare.com/v2/photos/" + PHOTO_ID + "?callback=XXX&v=" + Version +
+            var get = new HttpGet();
+            string endPoint = "https://api.foursquare.com/v2/photos/" + photoID + "?callback=XXX&v=" + Version +
                               "&oauth_token=" + _accessToken;
-            GET.Request(EndPoint);
-            Dictionary<string, object> JSONDictionary = Helpers.JsonDeserializer(GET.ResponseBody);
-            return new Photo(JSONDictionary);
+            get.Request(endPoint);
+            Dictionary<string, object> jsonDictionary = Helpers.JsonDeserializer(get.ResponseBody);
+            return new Photo(jsonDictionary);
         }
 
         /// <summary>
@@ -1710,20 +1698,17 @@ namespace Brahmastra.FoursquareAPI
         /// <param name="checkinId">the ID of a checkin owned by the user</param>
         /// <param name="tipId">the ID of a tip owned by the user</param>
         /// <param name="venueId">the ID of a venue, provided only when adding a public photo of the venue in general, rather than a private checkin or tip photo using the parameters above</param>
-        /// <param name="FilePath">The full path to the photo. Should be an image/jpeg</param>
+        /// <param name="filePath">The full path to the photo. Should be an image/jpeg</param>
         /// <param name="broadcast">Whether to broadcast this photo, ranging from twitter if you want to send to twitter, facebook if you want to send to facebook, or twitter,facebook if you want to send to both.</param>
         /// <param name="ll">Latitude and longitude of the user's location.</param>
         /// <param name="llAcc">Accuracy of the user's latitude and longitude, in meters.</param>
         /// <param name="alt">Altitude of the user's location, in meters.</param>
         /// <param name="altAcc">Vertical accuracy of the user's location, in meters.</param>
-        public Photo addPhoto(string checkinId, string tipId, string venueId, string FilePath, string broadcast,
+        public Photo AddPhoto(string checkinId, string tipId, string venueId, string filePath, string broadcast,
                               string ll, string llAcc, string alt, string altAcc)
         {
-            var parameters = new Dictionary<string, string>();
-
-            parameters.Add("callback", "XXX");
-            parameters.Add("v", Version);
-            parameters.Add("oauth_token", _accessToken);
+            var parameters = new Dictionary<string, string>
+                                 {{"callback", "XXX"}, {"v", Version}, {"oauth_token", _accessToken}};
 
             #region Parameter Conditioning
 
@@ -1756,9 +1741,9 @@ namespace Brahmastra.FoursquareAPI
 
             #endregion Parameter Conditioning
 
-            var POST = new HttpMultiPartPost("https://api.foursquare.com/v2/photos/add", parameters, FilePath);
-            Dictionary<string, object> JSONDictionary = Helpers.JsonDeserializer(POST.ResponseBody);
-            return new Photo(JSONDictionary);
+            var post = new HttpMultiPartPost("https://api.foursquare.com/v2/photos/add", parameters, filePath);
+            Dictionary<string, object> jsonDictionary = Helpers.JsonDeserializer(post.ResponseBody);
+            return new Photo(jsonDictionary);
         }
 
         /// <summary>
@@ -1768,57 +1753,54 @@ namespace Brahmastra.FoursquareAPI
         /// <param name="checkinId">the ID of a checkin owned by the user</param>
         /// <param name="tipId">the ID of a tip owned by the user</param>
         /// <param name="venueId">the ID of a venue, provided only when adding a public photo of the venue in general, rather than a private checkin or tip photo using the parameters above</param>
-        /// <param name="FileName">The name of the file</param>
+        /// <param name="fileName">The name of the file</param>
         /// <param name="fileStream">The FileStream to the photo. Should be an image/jpeg</param>
         /// <param name="broadcast">Whether to broadcast this photo, ranging from twitter if you want to send to twitter, facebook if you want to send to facebook, or twitter,facebook if you want to send to both.</param>
         /// <param name="ll">Latitude and longitude of the user's location.</param>
         /// <param name="llAcc">Accuracy of the user's latitude and longitude, in meters.</param>
         /// <param name="alt">Altitude of the user's location, in meters.</param>
         /// <param name="altAcc">Vertical accuracy of the user's location, in meters.</param>
-        public Photo PhotoAdd(string checkinId, string tipId, string venueId, string FileName, FileStream fileStream,
+        public Photo PhotoAdd(string checkinId, string tipId, string venueId, string fileName, FileStream fileStream,
                               string broadcast, string ll, string llAcc, string alt, string altAcc)
         {
-            var Parameters = new Dictionary<string, string>();
-
-            Parameters.Add("callback", "XXX");
-            Parameters.Add("v", Version);
-            Parameters.Add("oauth_token", _accessToken);
+            var parameters = new Dictionary<string, string>
+                                 {{"callback", "XXX"}, {"v", Version}, {"oauth_token", _accessToken}};
 
             #region Parameter Conditioning
 
             //Only one ID. Use the first one found.
 
             if (!checkinId.Equals(""))
-                Parameters.Add("checkinId", checkinId);
+                parameters.Add("checkinId", checkinId);
             else
             {
                 if (!tipId.Equals(""))
-                    Parameters.Add("tipId", tipId);
+                    parameters.Add("tipId", tipId);
                 else
-                    Parameters.Add("venueId", venueId);
+                    parameters.Add("venueId", venueId);
             }
 
             if (!broadcast.Equals(""))
-                Parameters.Add("broadcast", broadcast);
+                parameters.Add("broadcast", broadcast);
 
             if (!ll.Equals(""))
-                Parameters.Add("ll", ll);
+                parameters.Add("ll", ll);
 
             if (!llAcc.Equals(""))
-                Parameters.Add("llAcc", llAcc);
+                parameters.Add("llAcc", llAcc);
 
             if (!alt.Equals(""))
-                Parameters.Add("alt", alt);
+                parameters.Add("alt", alt);
 
             if (!altAcc.Equals(""))
-                Parameters.Add("altAcc", altAcc);
+                parameters.Add("altAcc", altAcc);
 
             #endregion Parameter Conditioning
 
-            var POST = new HttpMultiPartPost("https://api.foursquare.com/v2/photos/add", Parameters, FileName,
+            var post = new HttpMultiPartPost("https://api.foursquare.com/v2/photos/add", parameters, fileName,
                                              fileStream);
-            Dictionary<string, object> JSONDictionary = Helpers.JsonDeserializer(POST.ResponseBody);
-            return new Photo(JSONDictionary);
+            Dictionary<string, object> jsonDictionary = Helpers.JsonDeserializer(post.ResponseBody);
+            return new Photo(jsonDictionary);
         }
 
         #endregion Photos
@@ -1828,43 +1810,36 @@ namespace Brahmastra.FoursquareAPI
         /// <summary>
         /// Returns a setting for the acting user.   
         /// </summary>
-        /// <param name="Setting">The name of a setting</param>
-        public Settings getSettings()
+        public Settings GetSettings()
         {
-            var settings = new Dictionary<string, Object>();
-
-            var GET = new HttpGet();
-            string EndPoint = "https://api.foursquare.com/v2/settings/all?callback=XXX&v=" + Version +
+            var get = new HttpGet();
+            string endPoint = "https://api.foursquare.com/v2/settings/all?callback=XXX&v=" + Version +
                               "&callback=XXX&v=" + Version + "&oauth_token=" + _accessToken;
-            GET.Request(EndPoint);
-            Dictionary<string, object> JSONDictionary = Helpers.JsonDeserializer(GET.ResponseBody);
-            return new Settings(JSONDictionary);
+            get.Request(endPoint);
+            Dictionary<string, object> jsonDictionary = Helpers.JsonDeserializer(get.ResponseBody);
+            return new Settings(jsonDictionary);
         }
 
         /// <summary>
         /// Change a setting for the given user.    
         /// </summary>
-        /// <param name="Setting">The name of a setting</param>
+        /// <param name="setting">The name of a setting</param>
         /// <param name="value">True or False</param>
-        public Settings modifySettings(string Setting, bool Value)
+        public Settings ModifySettings(string setting, bool value)
         {
-            var SettingDictionary = new Dictionary<string, Object>();
+            string strValue = value ? "1" : "0";
 
-            string StrValue = "0";
-            if (Value)
-                StrValue = "1";
+            var parameters = new Dictionary<string, string>
+                                 {
+                                     {"callback", "XXX"},
+                                     {"v", Version},
+                                     {"oauth_token", _accessToken},
+                                     {"value", strValue}
+                                 };
 
-            var parameters = new Dictionary<string, string>();
-
-            parameters.Add("callback", "XXX");
-            parameters.Add("v", Version);
-            parameters.Add("oauth_token", _accessToken);
-
-            parameters.Add("value", StrValue);
-
-            var POST = new HttpPost(new Uri("https://api.foursquare.com/v2/settings/" + Setting + "/set"), parameters);
-            Dictionary<string, object> JSONDictionary = Helpers.JsonDeserializer(POST.ResponseBody);
-            return new Settings(JSONDictionary);
+            var post = new HttpPost(new Uri("https://api.foursquare.com/v2/settings/" + setting + "/set"), parameters);
+            Dictionary<string, object> jsonDictionary = Helpers.JsonDeserializer(post.ResponseBody);
+            return new Settings(jsonDictionary);
         }
 
         #endregion Settings
@@ -1874,17 +1849,17 @@ namespace Brahmastra.FoursquareAPI
         /// <summary>
         /// Gives details about a special, including text and whether it is unlocked for the current user. 
         /// </summary>
-        /// <param name="SPECIAL_ID">required ID of special to retrieve</param>
+        /// <param name="specialID">required ID of special to retrieve</param>
         /// <param name="venueId">required ID of a venue the special is running at</param>
-        public Special getSpecial(string SPECIAL_ID, string venueId)
+        public Special GetSpecial(string specialID, string venueId)
         {
-            var GET = new HttpGet();
-            string EndPoint = "https://api.foursquare.com/v2/specials/" + SPECIAL_ID + "?venueId=" + venueId +
+            var get = new HttpGet();
+            string endPoint = "https://api.foursquare.com/v2/specials/" + specialID + "?venueId=" + venueId +
                               "&callback=XXX&v=" + Version + "&oauth_token=" + _accessToken;
-            GET.Request(EndPoint);
-            Dictionary<string, object> JSONDictionary = Helpers.JsonDeserializer(GET.ResponseBody);
+            get.Request(endPoint);
+            Dictionary<string, object> jsonDictionary = Helpers.JsonDeserializer(get.ResponseBody);
 
-            return new Special(JSONDictionary);
+            return new Special(jsonDictionary);
         }
 
 
@@ -1896,104 +1871,102 @@ namespace Brahmastra.FoursquareAPI
         /// <param name="alt">Altitude of the user's location, in meters.</param>
         /// <param name="altAcc">Accuracy of the user's altitude, in meters.</param>
         /// <param name="limit">Number of results to return, up to 50.</param>
-        public Specials findSpecialsNearby(string ll, string llAcc, string alt, string altAcc, string limit)
+        public Specials FindSpecialsNearby(string ll, string llAcc, string alt, string altAcc, string limit)
         {
-            var GET = new HttpGet();
+            var get = new HttpGet();
 
             #region Query Conditioning
 
-            string Query = "";
+            string query = "";
 
             //ll
             if (!ll.Equals(""))
             {
-                if (Query.Equals(""))
-                    Query = "?";
+                if (query.Equals(""))
+                    query = "?";
                 else
-                    Query += "&";
-                Query += "ll=" + ll;
+                    query += "&";
+                query += "ll=" + ll;
             }
 
             //llAcc
             if (!llAcc.Equals(""))
             {
-                if (Query.Equals(""))
-                    Query = "?";
+                if (query.Equals(""))
+                    query = "?";
                 else
-                    Query += "&";
-                Query += "llAcc=" + llAcc;
+                    query += "&";
+                query += "llAcc=" + llAcc;
             }
 
             //alt
             if (!alt.Equals(""))
             {
-                if (Query.Equals(""))
-                    Query = "?";
+                if (query.Equals(""))
+                    query = "?";
                 else
-                    Query += "&";
-                Query += "alt=" + alt;
+                    query += "&";
+                query += "alt=" + alt;
             }
 
             //altAcc
             if (!altAcc.Equals(""))
             {
-                if (Query.Equals(""))
-                    Query = "?";
+                if (query.Equals(""))
+                    query = "?";
                 else
-                    Query += "&";
-                Query += "altAcc=" + altAcc;
+                    query += "&";
+                query += "altAcc=" + altAcc;
             }
 
             //limit
             if (!limit.Equals(""))
             {
-                if (Query.Equals(""))
-                    Query = "?";
+                if (query.Equals(""))
+                    query = "?";
                 else
-                    Query += "&";
-                Query += "limit=" + limit;
+                    query += "&";
+                query += "limit=" + limit;
             }
 
-            if (Query.Equals(""))
-                Query = "?";
+            if (query.Equals(""))
+                query = "?";
             else
-                Query += "&";
+                query += "&";
 
             #endregion Query Conditioning
 
-            string EndPoint = "https://api.foursquare.com/v2/specials/search" + Query + "callback=XXX&v=" + Version +
+            string endPoint = "https://api.foursquare.com/v2/specials/search" + query + "callback=XXX&v=" + Version +
                               "&oauth_token=" + _accessToken;
-            GET.Request(EndPoint);
-            Dictionary<string, object> JSONDictionary = Helpers.JsonDeserializer(GET.ResponseBody);
-            return new Specials(JSONDictionary);
+            get.Request(endPoint);
+            Dictionary<string, object> jsonDictionary = Helpers.JsonDeserializer(get.ResponseBody);
+            return new Specials(jsonDictionary);
         }
 
         /// <summary>
         /// Allows users to indicate a Special is improper in some way.     
         /// </summary>
-        /// <param name="ID">required The id of the special being flagged</param>
+        /// <param name="id">required The id of the special being flagged</param>
         /// <param name="venueId">required The id of the venue running the special.</param>
         /// <param name="problem">required One of not_redeemable, not_valuable, other</param>
         /// <param name="text">Additional text about why the user has flagged this special</param>
-        public bool flagSpecial(string ID, string venueId, string problem, string text)
+        public bool FlagSpecial(string id, string venueId, string problem, string text)
         {
-            var parameters = new Dictionary<string, string>();
-
-            parameters.Add("callback", "XXX");
-            parameters.Add("v", Version);
-            parameters.Add("oauth_token", _accessToken);
-
-            parameters.Add("venueId", venueId);
-            parameters.Add("problem", problem);
+            var parameters = new Dictionary<string, string>
+                                 {
+                                     {"callback", "XXX"},
+                                     {"v", Version},
+                                     {"oauth_token", _accessToken},
+                                     {"venueId", venueId},
+                                     {"problem", problem}
+                                 };
 
             if (!text.Equals(""))
                 parameters.Add("text", text);
 
-            var POST = new HttpPost(new Uri("https://api.foursquare.com/v2/specials/" + ID + "/flag"), parameters);
-            Dictionary<string, object> JSONDictionary = Helpers.JsonDeserializer(POST.ResponseBody);
-            if (((Dictionary<string, object>) JSONDictionary["meta"])["code"].ToString().Equals("200"))
-                return true;
-            return false;
+            var post = new HttpPost(new Uri("https://api.foursquare.com/v2/specials/" + id + "/flag"), parameters);
+            Dictionary<string, object> jsonDictionary = Helpers.JsonDeserializer(post.ResponseBody);
+            return ((Dictionary<string, object>) jsonDictionary["meta"])["code"].ToString().Equals("200");
         }
 
         #endregion Specials
