@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Brahmastra.FoursquareAPI.IO;
+using Brahmastra.FoursquareApi.IO;
 
-namespace Brahmastra.FoursquareAPI.Entities
+namespace Brahmastra.FoursquareApi.Entities
 {
     public class User : Response
     {

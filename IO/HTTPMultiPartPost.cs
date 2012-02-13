@@ -3,34 +3,36 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 
-namespace Brahmastra.FoursquareAPI.IO
+namespace Brahmastra.FoursquareApi.IO
 {
-    class HTTPMultiPartPost
+    class HttpMultiPartPost
     {
-        public string responseBody = "";
+        public string ResponseBody { get; private set; }
 
-        public HTTPMultiPartPost(string url, Dictionary<string, string> parameters, string filePath)
+        public HttpMultiPartPost(string url, Dictionary<string, string> parameters, string filePath)
         {
-            FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-            doPost(url, parameters, filePath, fileStream);
+            ResponseBody = "";
+            var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+            DoPost(url, parameters, filePath, fileStream);
         }
 
-        public HTTPMultiPartPost(string url, Dictionary<string, string> parameters, string fileName, FileStream fileStream)
+        public HttpMultiPartPost(string url, Dictionary<string, string> parameters, string fileName, FileStream fileStream)
         {
-            doPost(url, parameters, fileName, fileStream);
+            ResponseBody = "";
+            DoPost(url, parameters, fileName, fileStream);
         }
 
-        private void doPost(string url, Dictionary<string, string> parameters, string fileName, FileStream fileStream)
+        private void DoPost(string url, Dictionary<string, string> parameters, string fileName, FileStream fileStream)
         {
             string boundary = "---------------------------" + DateTime.Now.Ticks.ToString("x");
             byte[] boundaryBytes = System.Text.Encoding.ASCII.GetBytes("\r\n--" + boundary + "\r\n");
-            HttpWebRequest wr = (HttpWebRequest)WebRequest.Create(url);
+            var wr = (HttpWebRequest)WebRequest.Create(url);
             wr.ContentType = "multipart/form-data; boundary=" + boundary;
             wr.Method = "POST";
             wr.KeepAlive = true;
-            wr.Credentials = System.Net.CredentialCache.DefaultCredentials;
+            wr.Credentials = CredentialCache.DefaultCredentials;
             Stream rs = wr.GetRequestStream();
-            string formdataTemplate = "Content-Disposition: form-data; name=\"{0}\"\r\n\r\n{1}";
+            const string formdataTemplate = "Content-Disposition: form-data; name=\"{0}\"\r\n\r\n{1}";
             foreach (string key in parameters.Keys)
             {
                 rs.Write(boundaryBytes, 0, boundaryBytes.Length);
@@ -39,12 +41,12 @@ namespace Brahmastra.FoursquareAPI.IO
                 rs.Write(formitembytes, 0, formitembytes.Length);
             }
             rs.Write(boundaryBytes, 0, boundaryBytes.Length);
-            string headerTemplate = "Content-Disposition: form-data; name=\"{0}\"; filename=\"{1}\"\r\nContent-Type: {2}\r\n\r\n";
+            const string headerTemplate = "Content-Disposition: form-data; name=\"{0}\"; filename=\"{1}\"\r\nContent-Type: {2}\r\n\r\n";
             string header = string.Format(headerTemplate, "jpeg", fileName, "image/jpeg");
             byte[] headerBytes = System.Text.Encoding.UTF8.GetBytes(header);
             rs.Write(headerBytes, 0, headerBytes.Length);
-            byte[] buffer = new byte[4096];
-            int bytesRead = 0;
+            var buffer = new byte[4096];
+            int bytesRead;
             while ((bytesRead = fileStream.Read(buffer, 0, buffer.Length)) != 0)
             {
                 rs.Write(buffer, 0, bytesRead);
@@ -57,22 +59,20 @@ namespace Brahmastra.FoursquareAPI.IO
             try
             {
                 wResponse = wr.GetResponse();
-                Stream stream2 = wResponse.GetResponseStream();
-                StreamReader reader2 = new StreamReader(stream2);
-                responseBody = reader2.ReadToEnd();
+                var stream2 = wResponse.GetResponseStream();
+                if (stream2 != null)
+                {
+                    var reader2 = new StreamReader(stream2);
+                    ResponseBody = reader2.ReadToEnd();
+                }
             }
             catch (Exception ex)
             {
                 if (wResponse != null)
                 {
                     wResponse.Close();
-                    wResponse = null;
                     Console.WriteLine(ex.Message);
                 }
-            }
-            finally
-            {
-                wr = null;
             }
         }
     }

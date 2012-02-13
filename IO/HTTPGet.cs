@@ -1,92 +1,82 @@
-﻿using System;
-using System.IO;
-using System.Net;
+﻿using System.Net;
 using System.Text;
 
-namespace Brahmastra.FoursquareAPI.IO
+namespace Brahmastra.FoursquareApi.IO
 {
-    class HTTPGet
+    class HttpGet
     {
-        private HttpWebRequest request;
-        private HttpWebResponse response;
+        private HttpWebRequest _request;
+        private HttpWebResponse _response;
 
-        private string responseBody;
-        private string escapedBody;
-        private int statusCode;
+        private string _escapedBody;
 
-        public string ResponseBody { get { return responseBody; } }
-        public string EscapedBody { get { return getEscapedBody(); } }
-        public int StatusCode { get { return statusCode; } }
-        public string Headers { get { return getHeaders(); } }
-        public string StatusLine { get { return getStatusLine(); } }
+        public string ResponseBody { get; private set; }
+        public string EscapedBody { get { return GetEscapedBody(); } }
+        public int StatusCode { get; private set; }
+        public string Headers { get { return GetHeaders(); } }
+        public string StatusLine { get { return GetStatusLine(); } }
 
         public void Request(string url)
             {
-                StringBuilder respBody = new StringBuilder();
+                var respBody = new StringBuilder();
 
-                this.request = (HttpWebRequest)WebRequest.Create(url);
+                _request = (HttpWebRequest)WebRequest.Create(url);
 
                 try
                 {
-                    this.response = (HttpWebResponse)this.request.GetResponse();
-                    byte[] buf = new byte[8192];
-                    Stream respStream = this.response.GetResponseStream();
-                    int count = 0;
+                    _response = (HttpWebResponse)_request.GetResponse();
+                    var buf = new byte[8192];
+                    var respStream = _response.GetResponseStream();
+                    var count = 0;
                     do
                     {
-                        count = respStream.Read(buf, 0, buf.Length);
+                        if (respStream != null) count = respStream.Read(buf, 0, buf.Length);
                         if (count != 0)
                             respBody.Append(Encoding.ASCII.GetString(buf, 0, count));
-                    }
-                    while (count > 0);
+                    } while (count > 0);
 
-                    this.responseBody = respBody.ToString();
-                    this.statusCode = (int)(HttpStatusCode)this.response.StatusCode;
+                    ResponseBody = respBody.ToString();
+                    StatusCode = (int)_response.StatusCode;
                 }
                 catch (WebException ex)
                 {
-                    this.response = (HttpWebResponse)ex.Response;
-                    this.responseBody = "No Server Response";
-                    this.escapedBody = "No Server Response";
+                    _response = (HttpWebResponse)ex.Response;
+                    ResponseBody = "No Server Response";
+                    _escapedBody = "No Server Response";
                 }
             }
         
-        public string getEscapedBody()
+        public string GetEscapedBody()
             {  
                 // HTML escaped chars
-                string escapedBody = responseBody;
-                escapedBody = escapedBody.Replace("&", "&amp;");
-                escapedBody = escapedBody.Replace("<", "&lt;");
-                escapedBody = escapedBody.Replace(">", "&gt;");
-                escapedBody = escapedBody.Replace("'", "&apos;");
-                escapedBody = escapedBody.Replace("\"", "&quot;");
-                this.escapedBody = escapedBody;
+                _escapedBody = ResponseBody;
+                _escapedBody = _escapedBody.Replace("&", "&amp;");
+                _escapedBody = _escapedBody.Replace("<", "&lt;");
+                _escapedBody = _escapedBody.Replace(">", "&gt;");
+                _escapedBody = _escapedBody.Replace("'", "&apos;");
+                _escapedBody = _escapedBody.Replace("\"", "&quot;");
 
-                return escapedBody;
+                return _escapedBody;
             }
 
-        public string getHeaders()
+        public string GetHeaders()
             {
-                if (response == null)
-                    return "No Server Response";
-                else
-                {
-                    StringBuilder headers = new StringBuilder();
-                    for (int i = 0; i < this.response.Headers.Count; ++i)
-                        headers.Append(string.Format("{0}: {1}\n",
-                            response.Headers.Keys[i], response.Headers[i]));
+            if (_response == null)
+                return "No Server Response";
+            var headers = new StringBuilder();
+            for (var i = 0; i < _response.Headers.Count; ++i)
+                headers.Append(string.Format("{0}: {1}\n",
+                                             _response.Headers.Keys[i], _response.Headers[i]));
 
-                    return headers.ToString();
-                }
+            return headers.ToString();
             }
 
-        public string getStatusLine()
-            {
-                if (response == null)
-                    return "No Server Response";
-                else
-                    return string.Format("HTTP/{0} {1} {2}", response.ProtocolVersion,
-                        (int)response.StatusCode, response.StatusDescription);
-            }
+        public string GetStatusLine()
+        {
+            return _response == null
+                       ? "No Server Response"
+                       : string.Format("HTTP/{0} {1} {2}", _response.ProtocolVersion,
+                                       (int) _response.StatusCode, _response.StatusDescription);
+        }
     }
 }

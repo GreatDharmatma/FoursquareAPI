@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Brahmastra.FoursquareAPI.Entities
+namespace Brahmastra.FoursquareApi.Entities
 {
     public class LeaderboardItem
     {
-        internal string Json;
+        internal string Json = "";
 
         public Score ScoreThisWeek { get; private set; }
         public User LeaderBoardUser { get; private set; }

@@ -1,4 +1,4 @@
-﻿namespace Brahmastra.FoursquareAPI.Entities
+﻿namespace Brahmastra.FoursquareApi.Entities
 {
     public class Reason
     {

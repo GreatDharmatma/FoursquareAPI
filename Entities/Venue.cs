@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Brahmastra.FoursquareAPI.Entities.Notifications;
-using Brahmastra.FoursquareAPI.IO;
+using Brahmastra.FoursquareApi.IO;
 
-namespace Brahmastra.FoursquareAPI.Entities
+namespace Brahmastra.FoursquareApi.Entities
 {
     public class Venue : Response
     {

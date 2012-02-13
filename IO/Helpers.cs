@@ -1,77 +1,65 @@
 ﻿using System.Collections.Generic;
 using System.Web.Script.Serialization;
 
-namespace Brahmastra.FoursquareAPI.IO
+namespace Brahmastra.FoursquareApi.IO
 {
     class Helpers
     {
-        public static Dictionary<string, object> extractDictionary(Dictionary<string, object> JSONDictionary, string DictionaryPath)
+        public static Dictionary<string, object> ExtractDictionary(Dictionary<string, object> jsonDictionary, string dictionaryPath)
         {
-            string Key = "";
-            Dictionary<string, object> DictionaryObject = JSONDictionary;
+            var dictionaryObject = jsonDictionary;
 
-            while (DictionaryPath.Length > 0)
+            while (dictionaryPath.Length > 0)
             {
-                if (DictionaryPath.Contains(":"))
+                string key;
+                if (dictionaryPath.Contains(":"))
                 {
-                    Key = DictionaryPath.Substring(0, DictionaryPath.IndexOf(":"));
-                    DictionaryPath = DictionaryPath.Substring(DictionaryPath.IndexOf(":") + 1);
-                    if (DictionaryObject.ContainsKey(Key))
-                    {
-                        DictionaryObject = (Dictionary<string, object>)DictionaryObject[Key];
-                    }
+                    key = dictionaryPath.Substring(0, dictionaryPath.IndexOf(":", System.StringComparison.Ordinal));
+                    dictionaryPath = dictionaryPath.Substring(dictionaryPath.IndexOf(":", System.StringComparison.Ordinal) + 1);
+                    if (dictionaryObject.ContainsKey(key))
+                        dictionaryObject = (Dictionary<string, object>) dictionaryObject[key];
                     else
-                    {
-                        return DictionaryObject;
-                    }
+                        return dictionaryObject;
                 }
                 else
                 {
-                    Key = DictionaryPath;
-                    DictionaryPath = "";
-                    if (DictionaryObject.ContainsKey(Key))
-                    {
-                        DictionaryObject = (Dictionary<string, object>)DictionaryObject[Key];
-                    }
+                    key = dictionaryPath;
+                    dictionaryPath = "";
+                    if (dictionaryObject.ContainsKey(key))
+                        dictionaryObject = (Dictionary<string, object>) dictionaryObject[key];
                     else
-                    {
-                        return DictionaryObject;
-                    }
+                        return dictionaryObject;
                 }
             }
-            return DictionaryObject;
+            return dictionaryObject;
         }
 
-        public static string getDictionaryValue(Dictionary<string, object> JSONDictionary, string Key)
+        public static string GetDictionaryValue(Dictionary<string, object> jsonDictionary, string key)
         {
-            string ReturnString = "";
-            if (JSONDictionary.ContainsKey(Key))
+            var returnString = "";
+            if (jsonDictionary.ContainsKey(key))
             {
-                ReturnString = JSONDictionary[Key].ToString();
+                returnString = jsonDictionary[key].ToString();
             }
-            return ReturnString;
+            return returnString;
         }
 
-        public static string JSONSerializer(Dictionary<string, object> DictionaryObject)
+        public static string JsonSerializer(Dictionary<string, object> dictionaryObject)
         {
-            JavaScriptSerializer JSONSerializer = new JavaScriptSerializer();
-            return JSONSerializer.Serialize(DictionaryObject);
+            var jsonSerializer = new JavaScriptSerializer();
+            return jsonSerializer.Serialize(dictionaryObject);
         }
 
-        public static Dictionary<string, object> JSONDeserializer(string JSON)
+        public static Dictionary<string, object> JsonDeserializer(string json)
         {
-            if (JSON.StartsWith("XXX("))
-            {
-                JSON = JSON.Substring(4, JSON.Length - 6);
-            }
-            if (JSON.Equals("No Server Response"))
-            {
+            if (json.StartsWith("XXX("))
+                json = json.Substring(4, json.Length - 6);
+            if (json.Equals("No Server Response"))
                 return new Dictionary<string, object>();
-            }
 
-            JavaScriptSerializer JSONDeserializer = new JavaScriptSerializer();
+            var jsonDeserializer = new JavaScriptSerializer();
 
-            return (Dictionary<string, object>)JSONDeserializer.Deserialize(JSON, typeof(object));
+            return (Dictionary<string, object>)jsonDeserializer.Deserialize(json, typeof(object));
         }
     }
 }
